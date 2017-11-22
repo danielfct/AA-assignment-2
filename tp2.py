@@ -26,6 +26,7 @@ def transform_coordinates(latitude, longitude):
 
 def plot_cartesian_coordinates(x, y, z):
     """Plot Cartesian coordinates of seismic events"""
+    
     plt.figure(figsize=(10, 10))
     ax = plt.axes(projection='3d')
     ax.set_title('Cartesian coordinates of Seismic Events', {'fontsize':14, 'fontweight':'bold'})
