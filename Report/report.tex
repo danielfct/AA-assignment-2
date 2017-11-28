@@ -1,0 +1,201 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[british]{babel}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+%% To use hyperlinks
+\usepackage{hyperref}
+%% To use colors
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+%% To use maths
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e} 
+\usepackage{titlesec}
+
+%% Command to type a chi character
+\DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}
+\newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}} 
+%% Command to simulate a tab character
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+%% Set sub of subsections
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+
+\title{\textbf{Aprendizagem Autom\'{a}tica} \\
+	\large Assignment 2 - Clustering}
+
+\author{Andrea Mascaretti N52222\and Daniel Pimenta N45404}
+
+\begin{document}
+	\maketitle
+	\begin{abstract}
+		TODO
+	\end{abstract}
+
+
+	\section{Introduction}
+	\section{Clustering Algorithms}
+	\subsection{K-Means Algorithm}
+	In our exposition of the K-Means Algorithm we rely heavily on \cite{hastie01statisticallearning} and \cite{MR2372475}.
+	Suppose that we have a set of $n$ observations, indexed by $I = \{1, ..., n\}$, of some quantitative
+	variables
+	$$ C = \{ \boldsymbol{x}_{1}, \boldsymbol{x}_{2}, ..., \boldsymbol{x}_{n} \} $$
+	where
+	
+	$$ \boldsymbol{x}_{i} \in \mathbb{R}^{p},\;\forall i\in I$$
+	
+	
+	We also have a set of labels (at this stage we will consider their
+	number as given and such that $card(\mathcal{L})=k,\:k\in\left[1,n\right]\cap\mathbb{N}$)
+	
+	$$
+	\mathcal{L}=\left\{ l_{1},\ldots,l_{k}\right\} ,\;K:=\left\{ 1,\ldots,k\right\} 
+	$$
+	Our goal is to construct a (\textit{measurable}) function to associate each
+	and every element of $C$ to one label in $\mathcal{L}$. It is easy
+	to see that it makes no difference to work with $\mathcal{L}$ or
+	$K$ as we can always find a bijection between the two sets.
+	
+	We have reasons to believe that the elements belonging to one particular
+	group are somewhat more similar to each other than they are to members
+	of other groups and that one element can belong to one group and one
+	group only. We also hypothesise that there are no empty groups. Translating
+	this into mathematical terms, our aim is to find a collection
+	
+	$$ 	\left\{ C_{i}\right\} _{i\in K}	$$
+	
+	such that
+	$$ C_{i}\cap C_{j}=\emptyset,\;i\neq j $$
+	
+	and
+	
+	$$
+	\bigcup_{i=1}^{k} C_{i} = C
+	$$
+	or, in other words, we want to partition $C$ into $k$ clusters.
+	
+	We also want to define a function
+	$$
+	\delta:\;\boldsymbol{x}_{i} \mapsto l_{i}
+	$$
+	such that
+	$$
+	\forall i\in K,\;\delta^{-1}(l_{i})\neq\emptyset.
+	$$
+	
+	One immediate idea is to consider the following:
+	$$
+	\delta(\boldsymbol{x})= \sum_{i=1}^{k}\left( \mathcal{I}_{C_{i}} \left( \boldsymbol{x} \right) \cdot i \right)
+	$$
+	where
+	$$
+	\mathcal{I}_{A}(\underline{x})=\begin{cases}
+	1 & \boldsymbol{x}\in A\\
+	0 & \boldsymbol{x}\notin A
+	\end{cases}
+	$$
+	so that we have a function that takes as an input a value from $C$
+	and gives as an output the index of the label we are considering (and
+	we know they are finite).
+	
+	The main issue is to find a method to partition the set $C$ into
+	the clusters. First of all, we need to define in a more precise manner
+	the meaning of similarity: we will consider the squared \textsl{Euclidean
+		distance} for this purpose
+	$$
+	d(\boldsymbol{x}_{i},\boldsymbol{x}_{j})= \sum_{k = 1}^{p} \left( x_{ik} - x_{jk}
+	\right)^{2}.
+	$$
+	We now need to define some \textsl{loss} function and try to minimise
+	it. The most natural idea follows from the assumption that members
+	of one given cluster will be closer to each other than to member of
+	other clusters: this is equivalent to stating that the correct partitioning
+	will minimise the variability \textsl{within} the clusters. We need
+	to translate this key concept into an objective function.
+	
+	We define
+	$$
+	I_{k}:=\left\{ i\in I\:s.t.\:\boldsymbol{x}_{i}\in C_{k}\right\} 
+	$$
+	
+	and in this case we will have
+	$$
+	W(C_{k}) = \frac{1}{card(C_{k})} \underset{i,j\in I_{k}}{\sum} \sum_{l=1}^{p} \left(x_{il}-x_{jl}\right)^{2}
+	$$
+	and the problem becomes as follows
+	\footnote{It is important to notice that this function surely decreases for
+		increasing $k$ and in the extreme case of $k=n$ we have that each
+		cluster contains only one point and we have no variability whatsoever.
+		It is important to understand that we are looking for classes that
+		do have some internal variability.}
+	$$
+	\underset{C_{1},\ldots,C_{k}}{\min}\left\{ \sum_{k=1}^{K}W(C_{k})\right\} 
+	$$
+	Now, we want to find a way to solve this problem and here we find
+	the first issue as there are almost $K^{n}$ ways to partition $n$
+	observations into $K$ clusters. We shall therefore look for a local
+	optimum as follows.
+	
+	\subsection{Algorithm for K-means Clustering}
+	\begin{enumerate}
+		\item Randomly assign a number, from 1 to K, to each observation: they will
+		serve as initial cluster assignments. Set $\mu:=0$
+		\item Iterate what follows until termination criterion holds:
+		\begin{enumerate}
+			\item For each cluster, compute the \textsl{centroid} 
+			$$
+			\boldsymbol{c}_{i}^{\mu}=\frac{1}{card(C_{i}^{\mu})}\underset{j\in I_{i}^{\mu}}{\sum}\boldsymbol{x}_{i},
+			$$
+			computed as the mean vector of the observations in the $k$-th cluster
+			at $\mu$-th iteration
+			\item Assign each observation to the cluster whose centroid is closest (with
+			respect to the Euclidean distance) as follows
+			$$
+			\forall j\in I,\;i^{*}=\underset{i\in K}{\min}\left\{ d(\underline{x}_{j},\underline{c}_{i}^{\mu})\right\} =\min\left\{ d(\underline{x}_{j},\underline{c}_{1}^{\mu}),\ldots,d(\underline{x}_{j},\underline{c}_{k}^{\mu})\right\} \:\Longrightarrow\:\underline{x}_{j}\in C_{i^{*}}^{\mu}
+			$$
+			\item Set $\mu:=\mu+1$
+		\end{enumerate}
+		\item Termination occurs when cluster assignments stop changing
+	\end{enumerate}
+	
+	\subsection{Some comments regarding K-Means}
+	
+	The algorithm we have just defined is descent, that is it improves
+	the solution at each iteration so that when the termination condition
+	is true, we are certain to have reached a \textsl{local optimum. }It
+	is therefore a good practice that of iterating the algorithm various
+	times and pick the best solution.
+	
+	There is also one last important point to state. Any time we perform
+	the K-means methods, we will find $k$ clusters on our data. Now,
+	the question is: are we really separating actual subgroups or are
+	we just \textsl{clustering the noise}? Moreover, suppose that we are
+	dealing with a case in which the vast majority of data belongs to
+	a small number of subgroups, but for a small subset that is quite
+	different from the rest. As our method \textsl{forces} our data into
+	a fixed number of clusters, the presence of an outlying class might
+	bring to distorted results. So it is good practice not only to try
+	various values of $k$ to see what happens, but also to try and apply
+	to algorithm to subsets of our initial set to check that results remain
+	somewhat stable.
+	
+	COMPARISON WITH OTHER CLUSTERING METHODS
+	
+	
+	\bibliographystyle{alpha}
+	\bibliography{bibliography}	
+\end{document}

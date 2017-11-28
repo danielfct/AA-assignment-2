@@ -1,0 +1,14 @@
+\begin{thebibliography}{HTF01}
+
+\bibitem[HTF01]{hastie01statisticallearning}
+Trevor Hastie, Robert Tibshirani, and Jerome Friedman.
+\newblock {\em The Elements of Statistical Learning}.
+\newblock Springer Series in Statistics. Springer New York Inc., New York, NY,
+  USA, 2001.
+
+\bibitem[JW07]{MR2372475}
+Richard~A. Johnson and Dean~W. Wichern.
+\newblock {\em Applied multivariate statistical analysis}.
+\newblock Pearson Prentice Hall, Upper Saddle River, NJ, sixth edition, 2007.
+
+\end{thebibliography}
