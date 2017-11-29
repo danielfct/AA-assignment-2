@@ -12,4 +12,19 @@
   pages     = {xx+773},
 }
 
+@Book{hastie01statisticallearning,
+  title     = {The Elements of Statistical Learning},
+  publisher = {Springer New York Inc.},
+  year      = {2001},
+  author    = {Hastie, Trevor and Tibshirani, Robert and Friedman, Jerome},
+  series    = {Springer Series in Statistics},
+  address   = {New York, NY, USA},
+  added-at  = {2008-05-16T16:17:42.000+0200},
+  biburl    = {https://www.bibsonomy.org/bibtex/2f58afc5c9793fcc8ad8389824e57984c/sb3000},
+  interhash = {d585aea274f2b9b228fc1629bc273644},
+  intrahash = {f58afc5c9793fcc8ad8389824e57984c},
+  keywords  = {ml statistics},
+  timestamp = {2008-05-16T16:17:43.000+0200},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

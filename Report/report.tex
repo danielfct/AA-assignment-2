@@ -50,7 +50,7 @@
 	\section{Introduction}
 	\section{Clustering Algorithms}
 	\subsection{K-Means Algorithm}
-	In our exposition of the K-Means Algorithm we rely heavily on \cite{hastie01statisticallearning} and \cite{MR2372475}.
+	In our exposition of the K-Means Algorithm we rely heavily on \cite{hastie01statisticallearning}, \cite{MR2372475} and \cite{zaki2014dataminingbook}.
 	Suppose that we have a set of $n$ observations, indexed by $I = \{1, ..., n\}$, of some quantitative
 	variables
 	$$ C = \{ \boldsymbol{x}_{1}, \boldsymbol{x}_{2}, ..., \boldsymbol{x}_{n} \} $$
@@ -88,33 +88,18 @@
 	$$
 	or, in other words, we want to partition $C$ into $k$ clusters.
 	
-	We also want to define a function
-	$$
-	\delta:\;\boldsymbol{x}_{i} \mapsto l_{i}
-	$$
-	such that
-	$$
-	\forall i\in K,\;\delta^{-1}(l_{i})\neq\emptyset.
-	$$
-	
-	One immediate idea is to consider the following:
-	$$
-	\delta(\boldsymbol{x})= \sum_{i=1}^{k}\left( \mathcal{I}_{C_{i}} \left( \boldsymbol{x} \right) \cdot i \right)
-	$$
-	where
-	$$
-	\mathcal{I}_{A}(\underline{x})=\begin{cases}
-	1 & \boldsymbol{x}\in A\\
-	0 & \boldsymbol{x}\notin A
-	\end{cases}
-	$$
-	so that we have a function that takes as an input a value from $C$
-	and gives as an output the index of the label we are considering (and
-	we know they are finite).
+	Moreover, for each cluster we wish to find a representative member to summarise the information contained within the cluster. An usual choice is to consider the mean, or \textbf{centroid}, of the cluster defined as
+	\begin{equation*}
+	\boldsymbol{c}_{i} = \frac{1}{n_{i}} \sum_{\boldsymbol{x}_{j} \in C_{i}} \boldsymbol{x}_{j},
+	\end{equation*}
+	where $n_{i}$ is the cardinality of $C_{i}$.\\
 	
 	The main issue is to find a method to partition the set $C$ into
-	the clusters. First of all, we need to define in a more precise manner
-	the meaning of similarity: we will consider the squared \textsl{Euclidean
+	the clusters. A brute-force algorithm for finding a good clustering would imply generating all the possible partition of $n$ points into $k$ cluster and then, once an evaluation function has been set, take the best one. Informally, however, we can see that each point can be assigned to any of the $k$ clusters so that there are at most $k^{n}$ possible clusterings. Considering that any permutation of the $k$ clusters within a given clustering yields an equivalent result, we see that there are $O(\frac{k^{n}}{k!})$ clusterings of $n$ points into $k$ clusters. It is therefore clear that we need to rely on a different strategy.\\
+	
+	
+	First of all, we need to define in a more precise manner
+	the meaning of similarity between two points: we will consider the squared \textsl{Euclidean
 		distance} for this purpose
 	$$
 	d(\boldsymbol{x}_{i},\boldsymbol{x}_{j})= \sum_{k = 1}^{p} \left( x_{ik} - x_{jk}
@@ -134,7 +119,7 @@
 	
 	and in this case we will have
 	$$
-	W(C_{k}) = \frac{1}{card(C_{k})} \underset{i,j\in I_{k}}{\sum} \sum_{l=1}^{p} \left(x_{il}-x_{jl}\right)^{2}
+	W(C_{k}) = \frac{1}{n_{k}} \underset{i,j\in I_{k}}{\sum} \sum_{l=1}^{p} \left(x_{il}-x_{jl}\right)^{2}
 	$$
 	and the problem becomes as follows
 	\footnote{It is important to notice that this function surely decreases for
@@ -142,15 +127,36 @@
 		cluster contains only one point and we have no variability whatsoever.
 		It is important to understand that we are looking for classes that
 		do have some internal variability.}
-	$$
-	\underset{C_{1},\ldots,C_{k}}{\min}\left\{ \sum_{k=1}^{K}W(C_{k})\right\} 
-	$$
-	Now, we want to find a way to solve this problem and here we find
-	the first issue as there are almost $K^{n}$ ways to partition $n$
-	observations into $K$ clusters. We shall therefore look for a local
-	optimum as follows.
+	$$	\underset{C_{1},\ldots,C_{k}}{\min}\left\{ \sum_{k=1}^{K}W(C_{k})\right\} $$
 	
-	\subsection{Algorithm for K-means Clustering}
+	
+	To solve the problem, K-Means applies a greedy iterative algorithm to find a local optimum.
+	
+	The centroids are randomly generated into the data space, usually considering a uniform distribution between the range for each dimension. Every iteration, then, consists of two main steps: $(1)$ cluster assignment and $(2)$ centroid update. That is to say, given the $k$ cluster means, in the cluster assignment step, each point $\boldsymbol{x_{j}}$ is assigned to the closest mean, which induces a clustering (each cluster $C_{i}$ comprises all the points that are closer to $\boldsymbol{c}_{i}$ than to any other centroid).
+	\begin{equation*}
+	i^{*}=\arg\underset{i\in K}{ \min}\left\{ d(\boldsymbol{x}_{j},\boldsymbol{c}_{i})\right\} =\arg\min_{i \in K}\left\{ d(\boldsymbol{x}_{j},\boldsymbol{c}_{1}),\ldots,d(\boldsymbol{x}_{j},\boldsymbol{c}_{k})\right\} \:\Longrightarrow\:\boldsymbol{x}_{j}\in C_{i^{*}}
+	\end{equation*}
+	Now, given a set of cluster $C_{i},\, i=1,...,k$, in the centroid update step new values are computed for each cluster from the points in $C_{i}$. The cluster assignment and centroid update steps are repeated until we reach a fixed point or a local minimum. In more practical words, we can say that K-Means converges if the centroids do not change from one iteration to the next and we can stop when the distance between an iteration and another is smaller than some positive threshold $\varepsilon$.
+		
+	The algorithm we have just defined is descent, that is it improves
+	the solution at each iteration so that when the termination condition
+	is true, we are certain to have reached a \textsl{local optimum}.
+	Considering also that we randomly set the initial centroids, it is a good practice to run the algorithm several time and report the clustering with the evaluation value. It is also worth noting that K-Means generates convex-shaped clusters as the region in the data space corresponding to each cluster can be obtained intersecting the half-spaces resulting from the hyperplanes that bisect and are normal to the segments that join pairs of centroids.
+		
+	There is also one last important point to state. Any time we perform
+	the K-means methods, we will find $k$ clusters on our data. Now,
+	the question is: are we really separating actual subgroups or are
+	we just \textsl{clustering the noise}? Moreover, suppose that we are
+	dealing with a case in which the vast majority of data belongs to
+	a small number of subgroups, but for a small subset that is quite
+	different from the rest. As our method \textsl{forces} our data into
+	a fixed number of clusters, the presence of an outlying class might
+	bring to distorted results. So it is good practice not only to try
+	various values of $k$ to see what happens, but also to try and apply
+	to algorithm to subsets of our initial set to check that results remain
+	somewhat stable.
+	
+	\subsubsection{Algorithm for K-means Clustering}
 	\begin{enumerate}
 		\item Randomly assign a number, from 1 to K, to each observation: they will
 		serve as initial cluster assignments. Set $\mu:=0$
@@ -172,29 +178,7 @@
 		\item Termination occurs when cluster assignments stop changing
 	\end{enumerate}
 	
-	\subsection{Some comments regarding K-Means}
-	
-	The algorithm we have just defined is descent, that is it improves
-	the solution at each iteration so that when the termination condition
-	is true, we are certain to have reached a \textsl{local optimum. }It
-	is therefore a good practice that of iterating the algorithm various
-	times and pick the best solution.
-	
-	There is also one last important point to state. Any time we perform
-	the K-means methods, we will find $k$ clusters on our data. Now,
-	the question is: are we really separating actual subgroups or are
-	we just \textsl{clustering the noise}? Moreover, suppose that we are
-	dealing with a case in which the vast majority of data belongs to
-	a small number of subgroups, but for a small subset that is quite
-	different from the rest. As our method \textsl{forces} our data into
-	a fixed number of clusters, the presence of an outlying class might
-	bring to distorted results. So it is good practice not only to try
-	various values of $k$ to see what happens, but also to try and apply
-	to algorithm to subsets of our initial set to check that results remain
-	somewhat stable.
-	
-	COMPARISON WITH OTHER CLUSTERING METHODS
-	
+	\subsection{DBSCAN}
 	
 	\bibliographystyle{alpha}
 	\bibliography{bibliography}	
