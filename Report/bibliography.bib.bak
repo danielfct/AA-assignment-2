@@ -27,4 +27,13 @@
   timestamp = {2008-05-16T16:17:43.000+0200},
 }
 
+@Book{zaki2014dataminingbook,
+  title     = {Data Mining and Analysis: Fundamental Concepts and Algorithms},
+  publisher = {Cambridge University Press},
+  year      = {2014},
+  author    = {Mohammed J. Zaki and Wagner Meira, Jr.},
+  month     = {May},
+  isbn      = {9780521766333},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
