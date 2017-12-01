@@ -181,8 +181,37 @@
 	\subsection{DBSCAN}
 	In our analysis of the DBSCAN algorithm, we shall be relying mainly on \cite{zaki2014dataminingbook}. The necessity of an algorithm adopting a different philosophy with respect to that of the K-Means algorithm arises from the fact that representative methods (such as the latter or, for instance, EM methods) are suitable for finding, at best, convex clusters.
 	However, for non-convex clusters these methods are not capable to find the true clusters. This is because two points belonging to two different clusters might actually be close to each others than two points from the same on.
+	For this reason, density-based clustering algorithms adopt a different paradigm, using the local densities of points to determine the clusters rather than relying solely on distances between couple of them.
 	
+	We now introduce some preliminary concepts. First of all, we define a \textbf{ball} of radius $\varepsilon$ around a point $\boldsymbol{x} \in \mathbb{R}$, called \textit{$\varepsilon$-neighbourhood} of $\boldsymbol{x}$, as follows:
+	\begin{equation*}
+	\mathcal{N}_{\varepsilon} (\boldsymbol{x}) = B_{\delta}\left( \boldsymbol{x}, \varepsilon \right) = \left\{ \boldsymbol{y} \; s.t. \; \delta \left( \boldsymbol{x}, \boldsymbol{y} \right) \leq \varepsilon \right\}.
+	\end{equation*}
+	Here $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right)$ represents the distance between the points $\boldsymbol{x}$ and $\boldsymbol{y}$, which is usually assumed to be the Euclidean distance, that is
+	\begin{equation*}
+	\delta(\boldsymbol{x}, \boldsymbol{y}) = || \boldsymbol{x} - \boldsymbol{y} ||_{2}.
+	\end{equation*}
+	However, other distance metrics can be used.
+	For any point $\boldsymbol{x} \in \boldsymbol{D}$, where $\boldsymbol{D}$ is the set of data points, we say that $\boldsymbol{x}$ is a \textit{core point} if there are at least $k$ points in its $\varepsilon$-neighbourhood.
+	In other words, $\boldsymbol{x}$ is defined as a core point when it holds:
+	\begin{equation*}
+	| \mathcal{N}_{\varepsilon}(\boldsymbol{x})| \geq k,
+	\end{equation*}
+	where $k$ is a local density (or frequency) threshold defined by the user.
 	
+	A \textit{border point} is defined as a point that does not meet the $k$ threshold or, equivalently, that is such that $|\mathcal{N}_{\varepsilon}(\boldsymbol{x})| < k$, but belongs to the $\varepsilon$-neighbourhood of some core point $\boldsymbol{z}$.
+	Finally, if a point is neither a core point nor a border point, it is called a \textit{noise point} or outlier.
+	We say that a point $\boldsymbol{x}$ is \textit{directly density reachable} from another point $\boldsymbol{y}$ if $\boldsymbol{x} \in \mathcal{N}_{\varepsilon} \left( \boldsymbol{y} \right)$ and $\boldsymbol{y}$ is a core point.
+	We say that $\boldsymbol{x}$ is \textit{density reachable} from $\boldsymbol{y}$ if there exists a chain of point, $\boldsymbol{x}_{0}, \boldsymbol{x}_{1}, ..., \boldsymbol{x}_{l}$, such that $\boldsymbol{x}=\boldsymbol{x}_{0}$ and $\boldsymbol{y} = \boldsymbol{x}_{l}$, and $\boldsymbol{x}_{i}$ is directly density reachable from $\boldsymbol{x}_{i-1}$ for all $i=1,...,l$.
+	In other words, there must be a set of core points leading from $\boldsymbol{y}$ to $\boldsymbol{x}$. Note that the relationship of density reachability is an asymmetric property (or a directed relationship).
+	Define any two points $\boldsymbol{x}$ and $\boldsymbol{y}$ to be density connected if there exists a core point $\boldsymbol{z}$, such that both $\boldsymbol{x}$ and $\boldsymbol{y}$ are density reachable from $\boldsymbol{z}$.
+	A \textit{density based cluster} is defined as a maximal set of density connected points.
+	
+	The algorithm works as follows. First, DBSCAN computes the $\varepsilon$-neighbourhood $\mathcal{N}_{\varepsilon} \left( \boldsymbol{x}_{i} \right)$ for each point $\boldsymbol{x}_{i} \in \boldsymbol{D}$. It then checks if $\boldsymbol{x}_{i}$ is a core point. Moreover, it sets the cluster id $id\left(\boldsymbol{x}_{i}\right) = \emptyset$ for all points, indicating that they are not assigned to any cluster.
+	Next, starting from each core point that is not assigned, the algorithm recursively finds all its density connected points, which are assigned to the same clusters. Some border point may be reachable from core points in more than on cluster: they may either be arbitrarily assigned to one of the clusters or to all of them (if overlapping clusters are allowed!).
+	Those points that do not belong to any cluster are treated as outliers or noise.
+	DBSCAN can be viewed from another point of view. In fact, we can see it as a search for connected components in a graph with the following characteristics: the vertices corresponds to the core points in the dataset and there exists an (undirected) edge between two vertices (core points) if the distance between them is less than $\varepsilon$, that is to say, if each of them is in the $\varepsilon$-neighbourhood of the other point.
+	The connected components of this graph correspond to the core points of each cluster. Next, every core point incorporates into its cluster any border points in its neighbourhood.
 	\bibliographystyle{alpha}
 	\bibliography{bibliography}	
 \end{document}
