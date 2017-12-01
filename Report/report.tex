@@ -212,6 +212,7 @@
 	Those points that do not belong to any cluster are treated as outliers or noise.
 	DBSCAN can be viewed from another point of view. In fact, we can see it as a search for connected components in a graph with the following characteristics: the vertices corresponds to the core points in the dataset and there exists an (undirected) edge between two vertices (core points) if the distance between them is less than $\varepsilon$, that is to say, if each of them is in the $\varepsilon$-neighbourhood of the other point.
 	The connected components of this graph correspond to the core points of each cluster. Next, every core point incorporates into its cluster any border points in its neighbourhood.
+	The biggest drawback of DBSCAN is given by its sensitivity to the value of $\varepsilon$, in particular if clusters have different densities. What happens is that is $\varepsilon$ is too small, than sparser clusters will be categorised as noise and if it is too large different clusters might end up being grouped together.
 	\bibliographystyle{alpha}
 	\bibliography{bibliography}	
 \end{document}
