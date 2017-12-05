@@ -47,9 +47,10 @@
 
 @Book{Bishop:2006,
   title           = {Pattern Recognition and Machine Learning},
-  publisher       = {Springer},
+  publisher       = {Springer New York Inc.},
   year            = {2006},
   author          = {Bishop, Christopher M.},
+  address         = {New York, NY, USA},
   isbn            = {978-0387-31073-2},
   bib2html_rescat = {General ML},
   url             = {http://research.microsoft.com/en-us/um/people/cmbishop/prml/},

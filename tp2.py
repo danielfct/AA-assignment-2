@@ -3,6 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d as plt3d
 from skimage.io import imread
+from sklearn.cluster import KMeans
+from sklearn import metrics
+from scipy.spatial.distance import cdist, pdist
 
 FILENAME = 'tp2_data.csv'
 RADIUS = 6371
@@ -69,11 +72,76 @@ def plot_classes(labels, longitude, latitude, alpha=0.5, edge='k'):
         plt.plot(x[mask], y[mask], '.', markersize=1, mew=1, markerfacecolor='w', markeredgecolor=edge)
     plt.axis('off') 
 
-
+def preprocess_data(x, y, z):
+    num_row= x.shape[0]
+    X= np.empty((num_row,3)) #I create an empty matrix with num_row rows and 3 columns
+    for i in range(num_row):
+        X[i,]= [x[i], y[i], z[i]]
+    return X
 
 latitude, longitude, fault = read_csv();
 x, y, z = transform_coordinates(latitude, longitude);
 plot_cartesian_coordinates(x, y, z);
+X= preprocess_data(x,y,z)
 
+################### KMEANS ####################################################
+#test
+#kmeans= KMeans(n_clusters= 100, random_state= 0).fit(X)
+#NOT SURE THIS IS ACTUALLY USEFUL!!
+def KneeElbowAnalysis(x, max_k, seed):
+    '''Given data x, a maximum number of clusters max_k and a random seed seed,
+    the functions plots the WCSS and BCSS for k ranging from 1 to max_k'''
+    plot("WARNING: This function might need some tuning!")
+    k_values = range(1, max_k)
+    clusterings = [KMeans(n_clusters=k, random_state=seed).fit(x) for k in k_values]
+    centroids = [clustering.cluster_centers_ for clustering in clusterings]
+
+    #scipy.spatial.distance.cdist(XA, XB, metric='euclidean', *args, **kwargs)[source]
+    #Computes distance between each pair of the two collections of inputs.
+    D_k = [cdist(x, cent, 'euclidean') for cent in centroids]
+    cIdx = [np.argmin(D,axis=1) for D in D_k]
+    dist = [np.min(D,axis=1) for D in D_k]
+    avgWithinSS = [sum(d)/x.shape[0] for d in dist]
+
+    # Total with-in sum of square
+    wcss = [sum(d**2) for d in dist]
+
+    #scipy.spatial.distance.pdist(X, metric='euclidean', *args, **kwargs)[source]
+    #Pairwise distances between observations in n-dimensional space.
+    tss = sum(pdist(x)**2)/x.shape[0]
+    bss = tss-wcss
+
+    kIdx = 10-1
+    
+    #
+    # elbow curve
+    #
+    fig = plt.figure()
+    font = {'family' : 'sans', 'size'   : 12}
+    plt.rc('font', **font)
+    plt.plot(k_values, wcss, 'bo-', color='red', label='WCSS')
+    plt.plot(k_values, bss, 'bo-', color='blue', label='BCSS')
+    plt.grid(True)
+    plt.xlabel('Number of clusters')
+    plt.legend()
+    plt.title('Knee for KMeans clustering');
+    return 
+
+#def kmeans(X, max_num_clusters, seed)
+k= 95
+kmeans= KMeans(n_clusters= k, random_state= 20171205).fit(X)
+labels = kmeans.labels_
+labels_true= fault
+
+print('Estimated number of clusters: %d' % k)
+print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
+print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
+print("V-measure: %0.3f" % metrics.v_measure_score(labels_true, labels))
+print("Adjusted Rand Index: %0.3f"
+      % metrics.adjusted_rand_score(labels_true, labels))
+print("Adjusted Mutual Information: %0.3f"
+      % metrics.adjusted_mutual_info_score(labels_true, labels))
+print("Silhouette Coefficient: %0.3f"
+      % metrics.silhouette_score(X, labels))
 #def main():
 

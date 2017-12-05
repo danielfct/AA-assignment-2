@@ -1,4 +1,10 @@
-\begin{thebibliography}{ZWM14}
+\begin{thebibliography}{EKSX96}
+
+\bibitem[EKSX96]{Ester96adensity-based}
+Martin Ester, Hans-Peter Kriegel, Jörg Sander, and Xiaowei Xu.
+\newblock A density-based algorithm for discovering clusters in large spatial
+  databases with noise.
+\newblock pages 226--231. AAAI Press, 1996.
 
 \bibitem[HTF01]{hastie01statisticallearning}
 Trevor Hastie, Robert Tibshirani, and Jerome Friedman.
