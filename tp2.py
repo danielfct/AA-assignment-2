@@ -85,49 +85,8 @@ x, y, z = transform_coordinates(latitude, longitude);
 plot_cartesian_coordinates(x, y, z);
 X= preprocess_data(x,y,z)
 
-################### KMEANS ####################################################
-#test
-#kmeans= KMeans(n_clusters= 100, random_state= 0).fit(X)
-#NOT SURE THIS IS ACTUALLY USEFUL!!
-def KneeElbowAnalysis(x, max_k, seed):
-    '''Given data x, a maximum number of clusters max_k and a random seed seed,
-    the functions plots the WCSS and BCSS for k ranging from 1 to max_k'''
-    plot("WARNING: This function might need some tuning!")
-    k_values = range(1, max_k)
-    clusterings = [KMeans(n_clusters=k, random_state=seed).fit(x) for k in k_values]
-    centroids = [clustering.cluster_centers_ for clustering in clusterings]
 
-    #scipy.spatial.distance.cdist(XA, XB, metric='euclidean', *args, **kwargs)[source]
-    #Computes distance between each pair of the two collections of inputs.
-    D_k = [cdist(x, cent, 'euclidean') for cent in centroids]
-    cIdx = [np.argmin(D,axis=1) for D in D_k]
-    dist = [np.min(D,axis=1) for D in D_k]
-    avgWithinSS = [sum(d)/x.shape[0] for d in dist]
-
-    # Total with-in sum of square
-    wcss = [sum(d**2) for d in dist]
-
-    #scipy.spatial.distance.pdist(X, metric='euclidean', *args, **kwargs)[source]
-    #Pairwise distances between observations in n-dimensional space.
-    tss = sum(pdist(x)**2)/x.shape[0]
-    bss = tss-wcss
-
-    kIdx = 10-1
-    
-    #
-    # elbow curve
-    #
-    fig = plt.figure()
-    font = {'family' : 'sans', 'size'   : 12}
-    plt.rc('font', **font)
-    plt.plot(k_values, wcss, 'bo-', color='red', label='WCSS')
-    plt.plot(k_values, bss, 'bo-', color='blue', label='BCSS')
-    plt.grid(True)
-    plt.xlabel('Number of clusters')
-    plt.legend()
-    plt.title('Knee for KMeans clustering');
-    return 
-
+################ CLUSTER EVALUATION ###########################################
 def check_clusterings(labels_true, labels_pred):
     """Check that the two clusterings matching 1D integer arrays."""
     labels_true = np.asarray(labels_true)
@@ -195,45 +154,87 @@ def contingency_matrix(labels_true, labels_pred, eps=None, sparse=False):
             # don't use += as contingency is integer
             contingency = contingency + eps
     return contingency
-#def kmeans(X, max_num_clusters, seed)
-k= 5
+
+def clustering_evaluation(labels_true, labels_pred):
+    labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
+    c= contingency_matrix(labels_true, labels_pred, sparse= True)
+    n_samples, = labels_true.shape
+    tk = np.dot(c.data, c.data) - n_samples
+    pk = np.sum(np.asarray(c.sum(axis=0)).ravel() ** 2) - n_samples
+    qk = np.sum(np.asarray(c.sum(axis=1)).ravel() ** 2) - n_samples
+    N= labels_true.shape[0] * (labels_true.shape[0]-1) / 2
+    TP= np.int64(tk)
+    FP= np.int64(pk) - np.int64(tk)
+    FN= np.int64(qk) - np.int64(tk)
+    TN= np.int64(N) - TP - FP - FN
+    return TP, TN, FP, FN
+
+def precision(labels_true, labels_pred):
+    TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
+    if TP == 0 and FP == 0:
+        print("Both TP and FP are null!")
+        return -1
+    return TP / (TP + FP)
+
+def recall(labels_true, labels_pred):
+    TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
+    return TP / (FN + TP)
+
+def f1_score(labels_true, labels_pred):
+    prec= precision(labels_true, labels_pred)
+    rec= recall(labels_true, labels_pred)
+    return 2 *(prec * rec) / (prec + rec)
+
+def rand_index(labels_true, labels_pred):
+    TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
+    return (TP + TN) / (TP + TN + FP + FN)
+
+def adj_rand_index(labels_true, labels_pred):
+    return metrics.adjusted_rand_score(labels_true, labels)
+
+def silhouette(X, labels_pred):
+    return metrics.silhouette_score(X, labels_pred)
+
+
+################### KMEANS ####################################################
+def kmeans_tuning(X, max_cluster, labels_true, random_state):
+    num_clusters= np.empty(max_cluster - 1, dtype= int)
+    precision_kmeans= np.empty(max_cluster - 1)
+    recall_kmeans= np.empty(max_cluster - 1)
+    f1_score_kmeans= np.empty(max_cluster - 1)
+    rand_index_kmeans= np.empty(max_cluster - 1)
+    adj_rand_index_kmeans= np.empty(max_cluster - 1)
+    silhouette_kmeans= np.empty(max_cluster - 1)
+    
+    for k in range(2, max_cluster):
+        kmeans= KMeans(n_clusters= k, random_state= random_state).fit(X)
+        labels_pred = kmeans.labels_
+        num_clusters[k - 1]= k
+        precision_kmeans[k - 1]= precision(labels_true, labels_pred)
+        recall_kmeans[k - 1]= recall(labels_true, labels_pred)
+        f1_score_kmeans[k - 1]= f1_score(labels_true, labels_pred)
+        rand_index_kmeans[k - 1]= rand_index(labels_true, labels_pred)
+        adj_rand_index_kmeans[k - 1]= adj_rand_index(labels_true, labels_pred)
+        silhouette_kmeans[k - 1]= silhouette(X, labels_pred)
+    
+    #plt.plot(num_clusters.ravel(), adj_rand_index.ravel())
+    return num_clusters, precision_kmeans, recall_kmeans, f1_score_kmeans, rand_index_kmeans, adj_rand_index_kmeans, silhouette_kmeans
+ 
+
+a, b, c, d, e, f, g= kmeans_tuning(X, 100, fault, 20171205)
+       
+k= 3
 kmeans= KMeans(n_clusters= k, random_state= 20171205).fit(X)
 labels = kmeans.labels_
 labels_true= fault
 
 print('Estimated number of clusters: %d' % k)
-print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
-print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
-print("V-measure: %0.3f" % metrics.v_measure_score(labels_true, labels))
-print("Adjusted Rand Index: %0.3f"
-      % metrics.adjusted_rand_score(labels_true, labels))
-print("Adjusted Mutual Information: %0.3f"
-      % metrics.adjusted_mutual_info_score(labels_true, labels))
-print("Silhouette Coefficient: %0.3f"
-      % metrics.silhouette_score(X, labels))
+print('Precision %0.3f' % precision(labels_true, labels))
+print('Recall %0.3f' % recall(labels_true, labels))
+print('F1 Score %0.3f' % f1_score(labels_true, labels))
+print('Rand Index %0.3f' % rand_index(labels_true, labels))
+print('Adjusted Rand Index %0.3f' % adj_rand_index(labels_true, labels))
+print('Silhouette %0.3f' % silhouette(X, labels))
 
 
-#I try to obtain the FP, TP, TN, FN by means of the functions already
-#contained in scikit-learn. (https://github.com/scikit-learn/scikit-learn/blob/a24c8b46/sklearn/metrics/cluster/supervised.py#L787)
-#I still have to check whether the maths is understable
-labels_true, labels= check_clusterings(labels_true, labels)
-c= contingency_matrix(labels_true, labels, sparse= True)
-n_samples, = labels.shape
-tk = np.dot(c.data, c.data) - n_samples
-pk = np.sum(np.asarray(c.sum(axis=0)).ravel() ** 2) - n_samples
-qk = np.sum(np.asarray(c.sum(axis=1)).ravel() ** 2) - n_samples
-N= labels_true.shape[0] * (labels_true.shape[0]-1) / 2
-TP= np.int64(tk)
-FP= np.int64(pk) - np.int64(tk)
-FN= np.int64(qk) - np.int64(tk)
-TN= np.int64(N) - TP - FP - FN
-FMI= np.float64(TP / np.sqrt((TP + FP) * (TP + FN)))
-FMI_true= np.float64(metrics.fowlkes_mallows_score(labels_true, labels))
-print("Testing FMI: %0.3f" % FMI)
-#WARNING: THE FUNCTION IMPLEMENTED IN SCIKIT-LEARN DOES NOT WORK AS IT WORKS
-#WITH INT32 AND THEREFORE OVERFLOWS
-print("True FMI: %0.3f" % FMI_true)
-
-
-#def main():
-
+plot_classes(labels, longitude, latitude, alpha=0.5, edge='k')
