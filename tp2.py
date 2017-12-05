@@ -6,6 +6,7 @@ from skimage.io import imread
 from sklearn.cluster import KMeans
 from sklearn import metrics
 from scipy.spatial.distance import cdist, pdist
+from scipy import sparse as sp
 
 FILENAME = 'tp2_data.csv'
 RADIUS = 6371
@@ -127,8 +128,75 @@ def KneeElbowAnalysis(x, max_k, seed):
     plt.title('Knee for KMeans clustering');
     return 
 
+def check_clusterings(labels_true, labels_pred):
+    """Check that the two clusterings matching 1D integer arrays."""
+    labels_true = np.asarray(labels_true)
+    labels_pred = np.asarray(labels_pred)
+
+    # input checks
+    if labels_true.ndim != 1:
+        raise ValueError(
+            "labels_true must be 1D: shape is %r" % (labels_true.shape,))
+    if labels_pred.ndim != 1:
+        raise ValueError(
+            "labels_pred must be 1D: shape is %r" % (labels_pred.shape,))
+    if labels_true.shape != labels_pred.shape:
+        raise ValueError(
+            "labels_true and labels_pred must have same size, got %d and %d"
+            % (labels_true.shape[0], labels_pred.shape[0]))
+    return labels_true, labels_pred
+
+def contingency_matrix(labels_true, labels_pred, eps=None, sparse=False):
+    """Build a contingency matrix describing the relationship between labels.
+    Parameters
+    ----------
+    labels_true : int array, shape = [n_samples]
+        Ground truth class labels to be used as a reference
+    labels_pred : array, shape = [n_samples]
+        Cluster labels to evaluate
+    eps : None or float, optional.
+        If a float, that value is added to all values in the contingency
+        matrix. This helps to stop NaN propagation.
+        If ``None``, nothing is adjusted.
+    sparse : boolean, optional.
+        If True, return a sparse CSR continency matrix. If ``eps is not None``,
+        and ``sparse is True``, will throw ValueError.
+        .. versionadded:: 0.18
+    Returns
+    -------
+    contingency : {array-like, sparse}, shape=[n_classes_true, n_classes_pred]
+        Matrix :math:`C` such that :math:`C_{i, j}` is the number of samples in
+        true class :math:`i` and in predicted class :math:`j`. If
+        ``eps is None``, the dtype of this array will be integer. If ``eps`` is
+        given, the dtype will be float.
+        Will be a ``scipy.sparse.csr_matrix`` if ``sparse=True``.
+    """
+
+    if eps is not None and sparse:
+        raise ValueError("Cannot set 'eps' when sparse=True")
+
+    classes, class_idx = np.unique(labels_true, return_inverse=True)
+    clusters, cluster_idx = np.unique(labels_pred, return_inverse=True)
+    n_classes = classes.shape[0]
+    n_clusters = clusters.shape[0]
+    # Using coo_matrix to accelerate simple histogram calculation,
+    # i.e. bins are consecutive integers
+    # Currently, coo_matrix is faster than histogram2d for simple cases
+    contingency = sp.coo_matrix((np.ones(class_idx.shape[0]),
+                                 (class_idx, cluster_idx)),
+                                shape=(n_classes, n_clusters),
+                                dtype=np.int)
+    if sparse:
+        contingency = contingency.tocsr()
+        contingency.sum_duplicates()
+    else:
+        contingency = contingency.toarray()
+        if eps is not None:
+            # don't use += as contingency is integer
+            contingency = contingency + eps
+    return contingency
 #def kmeans(X, max_num_clusters, seed)
-k= 95
+k= 5
 kmeans= KMeans(n_clusters= k, random_state= 20171205).fit(X)
 labels = kmeans.labels_
 labels_true= fault
@@ -143,5 +211,29 @@ print("Adjusted Mutual Information: %0.3f"
       % metrics.adjusted_mutual_info_score(labels_true, labels))
 print("Silhouette Coefficient: %0.3f"
       % metrics.silhouette_score(X, labels))
+
+
+#I try to obtain the FP, TP, TN, FN by means of the functions already
+#contained in scikit-learn. (https://github.com/scikit-learn/scikit-learn/blob/a24c8b46/sklearn/metrics/cluster/supervised.py#L787)
+#I still have to check whether the maths is understable
+labels_true, labels= check_clusterings(labels_true, labels)
+c= contingency_matrix(labels_true, labels, sparse= True)
+n_samples, = labels.shape
+tk = np.dot(c.data, c.data) - n_samples
+pk = np.sum(np.asarray(c.sum(axis=0)).ravel() ** 2) - n_samples
+qk = np.sum(np.asarray(c.sum(axis=1)).ravel() ** 2) - n_samples
+N= labels_true.shape[0] * (labels_true.shape[0]-1) / 2
+TP= np.int64(tk)
+FP= np.int64(pk) - np.int64(tk)
+FN= np.int64(qk) - np.int64(tk)
+TN= np.int64(N) - TP - FP - FN
+FMI= np.float64(TP / np.sqrt((TP + FP) * (TP + FN)))
+FMI_true= np.float64(metrics.fowlkes_mallows_score(labels_true, labels))
+print("Testing FMI: %0.3f" % FMI)
+#WARNING: THE FUNCTION IMPLEMENTED IN SCIKIT-LEARN DOES NOT WORK AS IT WORKS
+#WITH INT32 AND THEREFORE OVERFLOWS
+print("True FMI: %0.3f" % FMI_true)
+
+
 #def main():
 
