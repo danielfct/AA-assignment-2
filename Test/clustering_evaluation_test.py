@@ -76,20 +76,39 @@ def contingency_matrix(labels_true, labels_pred, eps=None, sparse=False):
             contingency = contingency + eps
     return contingency
 
-
-
-def FMI(labels_true, labels_pred):
+def clustering_evaluation(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
     c= contingency_matrix(labels_true, labels_pred, sparse= True)
     n_samples, = labels_true.shape
     tk = np.dot(c.data, c.data) - n_samples
     pk = np.sum(np.asarray(c.sum(axis=0)).ravel() ** 2) - n_samples
     qk = np.sum(np.asarray(c.sum(axis=1)).ravel() ** 2) - n_samples
-    #N= labels_true.shape[0] * (labels_true.shape[0]-1) / 2
+    N= labels_true.shape[0] * (labels_true.shape[0]-1) / 2
     TP= np.int64(tk)
     FP= np.int64(pk) - np.int64(tk)
     FN= np.int64(qk) - np.int64(tk)
-    #TN= np.int64(N) - TP - FP - FN
+    TN= np.int64(N) - TP - FP - FN
+    return TP, TN, FP, FN
+
+def precision(labels_true, labels_pred):
+    TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
+    if TP == 0 and FP == 0:
+        print("Both TP and FP are null!")
+        return -1
+    return TP / (TP + FP)
+
+def recall(labels_true, labels_pred):
+    TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
+    return TP / (FN + TP)
+
+def F1Score(labels_true, labels_pred):
+    prec= precision(labels_true, labels_pred)
+    rec= recall(labels_true, labels_pred)
+    return 2 *(prec * rec) / (prec + rec)
+
+
+def FMI(labels_true, labels_pred):
+    TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
     if TP != 0:
         fmi= np.float64(TP / np.sqrt((TP + FP) * (TP + FN)))
     else:
@@ -106,11 +125,29 @@ def test(labels_true, labels_pred):
 #I still have to check whether the maths is understable
 
 #TEST 1
+print("\ntest 1")
 test([0, 0, 1, 1], [0, 0, 1, 1])
-
+print("Precision: %0.3f" % precision([0, 0, 1, 1], [0, 0, 1, 1]))
+print("Recall: %0.3f" % recall([0, 0, 1, 1], [0, 0, 1, 1]))
+print("F1: %0.3f" % F1Score([0, 0, 1, 1], [0, 0, 1, 1]))
 
 #TEST 2
+print("\ntest 2")
 test([0, 0, 1, 1], [1, 1, 0, 0])
+print("Precision: %0.3f" % precision([0, 0, 1, 1], [1, 1, 0, 0]))
+print("Recall: %0.3f" % recall([0, 0, 1, 1], [1, 1, 0, 0]))
+print("F1: %0.3f" % F1Score([0, 0, 1, 1], [1, 1, 0, 0]))
 
 #TEST 3
+print("\ntest 3")
 test([0, 0, 0, 0], [0, 1, 2, 3])
+print("Precision: %0.3f" % precision([0, 0, 0, 0], [0, 1, 2, 3]))
+print("Recall: %0.3f" % recall([0, 0, 0, 0], [0, 1, 2, 3]))
+print("F1: %0.3f" % F1Score([0, 0, 0, 0], [0, 1, 2, 3]))
+
+#TEST 4
+print("\ntest 4")
+test([1, 1, 2, 2], [0, 0, 3, 3])
+print("Precision: %0.3f" % precision([1, 1, 2, 2], [0, 0, 3, 3]))
+print("Recall: %0.3f" % recall([1, 1, 2, 2], [0, 0, 3, 3]))
+print("F1: %0.3f" % F1Score([1, 1, 2, 2], [0, 0, 3, 3]))
