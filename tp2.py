@@ -118,7 +118,7 @@ def contingency_matrix(labels_true, labels_pred, eps=None, sparse=False):
         matrix. This helps to stop NaN propagation.
         If ``None``, nothing is adjusted.
     sparse : boolean, optional.
-        If True, return a sparse CSR continency matrix. If ``eps is not None``,
+        If True, return a sparse CSR contingency matrix. If ``eps is not None``,
         and ``sparse is True``, will throw ValueError.
         .. versionadded:: 0.18
     Returns
@@ -155,6 +155,7 @@ def contingency_matrix(labels_true, labels_pred, eps=None, sparse=False):
             contingency = contingency + eps
     return contingency
 
+#TODO: check if this is right
 def clustering_evaluation(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
     c= contingency_matrix(labels_true, labels_pred, sparse= True)
@@ -195,46 +196,46 @@ def adj_rand_index(labels_true, labels_pred):
 def silhouette(X, labels_pred):
     return metrics.silhouette_score(X, labels_pred)
 
+def evaluate_cluster(X, labels_true, labels_pred):
+    return np.array([precision(labels_true, labels_pred), recall(labels_true, labels_pred), rand_index(labels_true, labels_pred), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
 
 ################### KMEANS ####################################################
-def kmeans_tuning(X, max_cluster, labels_true, random_state):
-    num_clusters= np.empty(max_cluster - 1, dtype= int)
-    precision_kmeans= np.empty(max_cluster - 1)
-    recall_kmeans= np.empty(max_cluster - 1)
-    f1_score_kmeans= np.empty(max_cluster - 1)
-    rand_index_kmeans= np.empty(max_cluster - 1)
-    adj_rand_index_kmeans= np.empty(max_cluster - 1)
-    silhouette_kmeans= np.empty(max_cluster - 1)
-    
-    for k in range(2, max_cluster):
-        kmeans= KMeans(n_clusters= k, random_state= random_state).fit(X)
-        labels_pred = kmeans.labels_
-        num_clusters[k - 1]= k
-        precision_kmeans[k - 1]= precision(labels_true, labels_pred)
-        recall_kmeans[k - 1]= recall(labels_true, labels_pred)
-        f1_score_kmeans[k - 1]= f1_score(labels_true, labels_pred)
-        rand_index_kmeans[k - 1]= rand_index(labels_true, labels_pred)
-        adj_rand_index_kmeans[k - 1]= adj_rand_index(labels_true, labels_pred)
-        silhouette_kmeans[k - 1]= silhouette(X, labels_pred)
-    
-    #plt.plot(num_clusters.ravel(), adj_rand_index.ravel())
-    return num_clusters, precision_kmeans, recall_kmeans, f1_score_kmeans, rand_index_kmeans, adj_rand_index_kmeans, silhouette_kmeans
- 
+def kmeans_tuning(X, max_cluster, labels_true, seed):
+    '''The function takes as input the dataset X,
+    the maximum number of clusters we are willing to have,
+    the true labelling of the data, the random seed.
+    It computes the clusters applying the kmeans algorithm on the dataset using
+    the given seed, from 2 to max_cluster. It outputs quality of indeces
+    of the clustering: precision, recall, f1-score, rand index, adjusted
+    rand index, silhouette'''
+    kmeans_eval= np.zeros((max_cluster - 1, 5))
+    i= 0
+    for k in range(2, max_cluster + 1):
+        kmeans= KMeans(k, random_state= seed).fit(X)
+        labels_pred= kmeans.labels_
+        current_eval= evaluate_cluster(X, labels_true, labels_pred)
+        #print(current_eval)
+        kmeans_eval[i,:]= current_eval
+        i += 1
+        print(i/max_cluster)
+    return kmeans_eval
 
-a, b, c, d, e, f, g= kmeans_tuning(X, 100, fault, 20171205)
-       
-k= 3
-kmeans= KMeans(n_clusters= k, random_state= 20171205).fit(X)
-labels = kmeans.labels_
-labels_true= fault
+max_cluster= 100
+kmeans_eval= kmeans_tuning(X, max_cluster, fault, 205)
 
-print('Estimated number of clusters: %d' % k)
-print('Precision %0.3f' % precision(labels_true, labels))
-print('Recall %0.3f' % recall(labels_true, labels))
-print('F1 Score %0.3f' % f1_score(labels_true, labels))
-print('Rand Index %0.3f' % rand_index(labels_true, labels))
-print('Adjusted Rand Index %0.3f' % adj_rand_index(labels_true, labels))
-print('Silhouette %0.3f' % silhouette(X, labels))
+ax = plt.figure().add_subplot(111)
+plt.plot(range(2, max_cluster + 1), kmeans_eval[:,4], label= "Silhouette K-Means")
+plt.xlabel("Number of clusters")
+plt.ylabel("Silhouette")
+plt.title("Silhouette K-Means")
+plt.legend()
+plt.show()
+plt.close()
 
-
-plot_classes(labels, longitude, latitude, alpha=0.5, edge='k')
+#I pick the number of labels that induces the best silhuoette
+best_k= kmeans_eval[:,4].argmax() + 1
+print('Best k is %d' % best_k)
+best_kmeans= KMeans(best_k, random_state= 205).fit(X)
+plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
+best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
+print(best_kmean_eval)
