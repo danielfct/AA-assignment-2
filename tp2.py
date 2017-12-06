@@ -191,13 +191,13 @@ def rand_index(labels_true, labels_pred):
     return (TP + TN) / (TP + TN + FP + FN)
 
 def adj_rand_index(labels_true, labels_pred):
-    return metrics.adjusted_rand_score(labels_true, labels)
+    return metrics.adjusted_rand_score(labels_true, labels_pred)
 
 def silhouette(X, labels_pred):
     return metrics.silhouette_score(X, labels_pred)
 
 def evaluate_cluster(X, labels_true, labels_pred):
-    return np.array([precision(labels_true, labels_pred), recall(labels_true, labels_pred), rand_index(labels_true, labels_pred), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
+    return np.array([precision(labels_true, labels_pred), recall(labels_true, labels_pred), f1_score(labels_true, labels_pred), rand_index(labels_true, labels_pred), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
 
 ################### KMEANS ####################################################
 def kmeans_tuning(X, max_cluster, labels_true, seed):
@@ -208,7 +208,7 @@ def kmeans_tuning(X, max_cluster, labels_true, seed):
     the given seed, from 2 to max_cluster. It outputs quality of indeces
     of the clustering: precision, recall, f1-score, rand index, adjusted
     rand index, silhouette'''
-    kmeans_eval= np.zeros((max_cluster - 1, 5))
+    kmeans_eval= np.zeros((max_cluster - 1, 6))
     i= 0
     for k in range(2, max_cluster + 1):
         kmeans= KMeans(k, random_state= seed).fit(X)
@@ -224,7 +224,7 @@ max_cluster= 100
 kmeans_eval= kmeans_tuning(X, max_cluster, fault, 205)
 
 ax = plt.figure().add_subplot(111)
-plt.plot(range(2, max_cluster + 1), kmeans_eval[:,4], label= "Silhouette K-Means")
+plt.plot(range(2, max_cluster + 1), kmeans_eval[:, 5], label= "Silhouette K-Means")
 plt.xlabel("Number of clusters")
 plt.ylabel("Silhouette")
 plt.title("Silhouette K-Means")
@@ -233,9 +233,15 @@ plt.show()
 plt.close()
 
 #I pick the number of labels that induces the best silhuoette
-best_k= kmeans_eval[:,4].argmax() + 1
+best_k= kmeans_eval[:,5].argmax() + 1
 print('Best k is %d' % best_k)
 best_kmeans= KMeans(best_k, random_state= 205).fit(X)
 plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
 best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
-print(best_kmean_eval)
+print('\n')
+print("Precision: %0.3f" % best_kmean_eval[0])
+print("Recall: %0.3f" % best_kmean_eval[1])
+print("F1: %0.3f" % best_kmean_eval[2])
+print("Rand Index: %0.3f" % best_kmean_eval[3])
+print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
+print("Silhouette: %0.3f" % best_kmean_eval[5])
