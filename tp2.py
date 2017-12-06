@@ -48,10 +48,10 @@ def plot_classes(labels, longitude, latitude, alpha=0.5, edge='k'):
     x = longitude/180 * np.pi
     y = latitude/180 * np.pi
     ax = plt.subplot(111, projection="mollweide")
-    print(ax.get_xlim(), ax.get_ylim())
+    #print(ax.get_xlim(), ax.get_ylim())
     t = ax.transData.transform(np.vstack((x, y)).T)
-    print(np.min(np.vstack((x, y)).T, axis=0))
-    print(np.min(t, axis=0))
+    #print(np.min(np.vstack((x, y)).T, axis=0))
+    #print(np.min(t, axis=0))
     clims = np.array([(-np.pi, 0), (np.pi, 0), (0, -np.pi/2), (0, np.pi/2)])
     lims = ax.transData.transform(clims)
     plt.close()
@@ -232,16 +232,17 @@ plt.legend()
 plt.show()
 plt.close()
 
-#I pick the number of labels that induces the best silhuoette
-best_k= kmeans_eval[:,5].argmax() + 1
-print('Best k is %d' % best_k)
-best_kmeans= KMeans(best_k, random_state= 205).fit(X)
-plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
-best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
-print('\n')
-print("Precision: %0.3f" % best_kmean_eval[0])
-print("Recall: %0.3f" % best_kmean_eval[1])
-print("F1: %0.3f" % best_kmean_eval[2])
-print("Rand Index: %0.3f" % best_kmean_eval[3])
-print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
-print("Silhouette: %0.3f" % best_kmean_eval[5])
+index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
+for i in range(0, 6):
+    best_k= kmeans_eval[:,i].argmax() + 2
+    best_kmeans= KMeans(best_k, random_state= 205).fit(X)
+    plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
+    best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
+    print('\nMaximising ' + index_name[i])
+    print('Number of clusters: %d' % best_k)
+    print("Precision: %0.3f" % best_kmean_eval[0])
+    print("Recall: %0.3f" % best_kmean_eval[1])
+    print("F1: %0.3f" % best_kmean_eval[2])
+    print("Rand Index: %0.3f" % best_kmean_eval[3])
+    print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
+    print("Silhouette: %0.3f" % best_kmean_eval[5])
