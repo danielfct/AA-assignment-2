@@ -8,6 +8,8 @@ from sklearn import metrics
 from scipy.spatial.distance import cdist, pdist
 from scipy import sparse as sp
 import sklearn
+from sklearn import mixture
+import itertools
 
 FILENAME = 'tp2_data.csv'
 RADIUS = 6371
