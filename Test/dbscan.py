@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec  6 12:57:43 2017
+
+@author: Andrea
+"""
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -83,7 +89,7 @@ def preprocess_data(x, y, z):
 
 latitude, longitude, fault = read_csv();
 x, y, z = transform_coordinates(latitude, longitude);
-plot_cartesian_coordinates(x, y, z);
+#plot_cartesian_coordinates(x, y, z);
 X= preprocess_data(x,y,z)
 
 
@@ -200,54 +206,6 @@ def silhouette(X, labels_pred):
 def evaluate_cluster(X, labels_true, labels_pred):
     return np.array([precision(labels_true, labels_pred), recall(labels_true, labels_pred), f1_score(labels_true, labels_pred), rand_index(labels_true, labels_pred), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
 
-################### KMEANS ####################################################
-def kmeans_tuning(X, max_cluster, labels_true, seed):
-    '''The function takes as input the dataset X,
-    the maximum number of clusters we are willing to have,
-    the true labelling of the data, the random seed.
-    It computes the clusters applying the kmeans algorithm on the dataset using
-    the given seed, from 2 to max_cluster. It outputs quality of indeces
-    of the clustering: precision, recall, f1-score, rand index, adjusted
-    rand index, silhouette'''
-    kmeans_eval= np.zeros((max_cluster - 1, 6))
-    i= 0
-    for k in range(2, max_cluster + 1):
-        kmeans= KMeans(k, random_state= seed).fit(X)
-        labels_pred= kmeans.labels_
-        current_eval= evaluate_cluster(X, labels_true, labels_pred)
-        #print(current_eval)
-        kmeans_eval[i,:]= current_eval
-        i += 1
-        print(i/max_cluster)
-    return kmeans_eval
-
-max_cluster= 100
-kmeans_eval= kmeans_tuning(X, max_cluster, fault, 205)
-
-ax = plt.figure().add_subplot(111)
-plt.plot(range(2, max_cluster + 1), kmeans_eval[:, 5], label= "Silhouette K-Means")
-plt.xlabel("Number of clusters")
-plt.ylabel("Silhouette")
-plt.title("Silhouette K-Means")
-plt.legend()
-plt.show()
-plt.close()
-
-index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
-for i in range(0, 6):
-    best_k= kmeans_eval[:,i].argmax() + 2
-    best_kmeans= KMeans(best_k, random_state= 205).fit(X)
-    plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
-    best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
-    print('\nMaximising ' + index_name[i])
-    print('Number of clusters: %d' % best_k)
-    print("Precision: %0.3f" % best_kmean_eval[0])
-    print("Recall: %0.3f" % best_kmean_eval[1])
-    print("F1: %0.3f" % best_kmean_eval[2])
-    print("Rand Index: %0.3f" % best_kmean_eval[3])
-    print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
-    print("Silhouette: %0.3f" % best_kmean_eval[5])
-    
 ###################### DBSCAN #################################################
 #First of all, I have to set the eps parameter of the classifier. To do so,
 #I create a fictitious output vector, filled with ones and then applied the
