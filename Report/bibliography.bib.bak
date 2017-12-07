@@ -78,4 +78,15 @@
   publisher = {AAAI Press},
 }
 
+@Book{9781107077232,
+  title     = {Mining of Massive Datasets},
+  publisher = {Cambridge University Pr.},
+  year      = {2014},
+  author    = {Leskovec, Jure and Rajaraman, Anand and Ullman, Jeffrey David},
+  isbn      = {9781107077232},
+  date      = {2014-11-13},
+  ean       = {9781107077232},
+  url       = {http://www.ebook.de/de/product/22646520/jure_leskovec_anand_rajaraman_jeffrey_david_ullman_mining_of_massive_datasets.html},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

@@ -60,14 +60,25 @@
 	In this sense, clustering is helpful when it comes to understanding the structure of the data at hands, especially when dealing with high dimensional datasets. Clustering can provide us with a representation of the data that can facilitate gaining some meaningful insight into their structure. Moreover, it can be applied to reduce complexity and summarise data when this may be needed.\\
 	
 	A dataset suitable for clustering is a collection of points $\left\{ \boldsymbol{x}_{i} \right\}_{i=1}^{N} \subset \mathcal{X}$. In a general setting, $\mathcal{X}$ can be any abstract space, but it is often the case that it is a Euclidean space. To perform clustering we need to endow $\mathcal{X}$ with a distance measure (or metric) $\delta$. Note that a metric on a set $\mathcal{X}$ is a function $\delta : \mathcal{X} \times \mathcal{X} \to \left[0,+\infty\right)$ such that for all $x, y, z \in \mathcal{X}$
-	\begin{itemize}
-	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right)\geq 0$
-	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right) = 0 \iff x = y$
-	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right) = \delta \left( \boldsymbol{y}, \boldsymbol{x} \right) $
-	\item $ \delta \left( \boldsymbol{x}, \boldsymbol{z} \right) \leq \delta \left( \boldsymbol{x}, \boldsymbol{y} \right) + \delta \left( \boldsymbol{y}, \boldsymbol{z} \right) $
-	\end{itemize}
+	\begin{enumerate}
+	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right)\geq 0$ (non-negativity)
+	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right) = 0 \iff x = y$ (identity of indiscernibles)
+	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right) = \delta \left( \boldsymbol{y}, \boldsymbol{x} \right) $ (symmetry)
+	\item $ \delta \left( \boldsymbol{x}, \boldsymbol{z} \right) \leq \delta \left( \boldsymbol{x}, \boldsymbol{y} \right) + \delta \left( \boldsymbol{y}, \boldsymbol{z} \right) $ (triangular inequality)
+	\end{enumerate}
+	Clustering algorithms can be differentiated (some may say \textit{clustered}) into two main different categories, according to the strategy implemented.
+	\begin{description}
+		\item[Hierarchical clustering] In hierarchical clustering, every point is initially assigned to its own cluster. Clusters are then merged according to their "closeness", where we can use one of the many definitions of the term. The process is ended according to some stopping criteria, for example because we have reached a given number of total cluster input as a threshold or because from merging any of the given clusters we obtain a situation in which data points are too "spread out" according to the definition of "closeness" in use.
+		\item[Partitional clustering] In partitional clustering, points are considered in some order and assigned iteratively to the clusters to which the fit best. This phase usually follows another one, during which initial cluster are estimated. Different algorithms in this category allow combining or splitting clusters, or leaving points unassigned when they are \textit{outliers} (i.e., points too far from any cluster).
+	\end{description}
 	
-	
+	Other two possible classification frameworks, that we mention only briefly, consider other properties:
+	\begin{enumerate}
+		\item[(a)] We have algorithms that assume that $\mathcal{X}$ is a Euclidean space and others that only consider $\left( \mathcal{X}, \delta \right)$ to be an abstract measure space. In the first case, it is possible to summarise a collection of points by means of a \textit{centroid} - a notion we will introduce later - whereas in the second there is no such thing and we are forced to find a different way to summarise the information contained within a cluster.
+		\item[(b)] In this case, the main assumption regards the memory of the machine we are working on. We have two possibilities: we can either assume that the data set is small enough to fit into the main memory or that our data resides in some secondary memory. Sometimes it is infeasible to look at all the pairs of data and strategies must be developed to respond to that. Another problem arising is that of summarising the information contained in every cluster into the main memory for computations.
+	\end{enumerate}
+
+	The clustering algorithms considered in this work, namely the K-Means, the DBSCAN and the Gaussian mixture models, are partitional clustering algorithms working in Euclidean spaces. What is more, given the dimensionality of our dataset we will be working on the main memory of the computer, thus avoiding all the issues caused by highly-dimensional data.
 	\subsection{Assessing the fitness of clustering}
 	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
