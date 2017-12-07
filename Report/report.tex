@@ -302,6 +302,13 @@
  	\pi_{k} = \frac{N_{k}}{N},
  	\end{equation*}
  	so that the mixing coefficients is given by the average responsibility that components carry in explaining the data points.
+ 	
+ 	It is worth emphasising that the results obtained do not constitute a closed-form solution for the parameters of the mixture model, because the responsibilities of $\gamma \left( z_{nk} \right)$ depend on those parameters in a complex way, as stated in \eqref{eqn::posterior}.
+ 	Therefore, we first choose some initial values for the means, covariances and mixing coefficients. Then, we alternate between the two steps of the EM algorithm: step E (expectation) and step M (maximisation).
+ 	During step E, we use the current values for the parameters to evaluate the posterior probabilities. We then use this probabilities, in the M step, to re-estimate the means, covariances and mixing coefficients.
+ 	Note that, in doing so, we are firstly evaluating the means, then the covariances and finally the mixing coefficients.
+ 	This algorithm tends to require many more iterations compared to the K-Means algorithm to converge, also requiring more computations at every cycle. It is therefore common to run the K-Means algorithm first in order to find a suitable initialisation for a Gaussian mixture model.
+ 	The means are the centroids of the clusters, the covariances are set as the covariances of the clusters and the mixing coefficients are set to be the proportions of points belonging to the cluster.
 	\bibliographystyle{alpha}
 	\bibliography{bibliography}	
 \end{document}
