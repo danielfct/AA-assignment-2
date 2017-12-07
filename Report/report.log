@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  7 DEC 2017 01:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  7 DEC 2017 02:08
 entering extended mode
 **./report.tex
 (report.tex
@@ -867,25 +867,31 @@ Underfull \hbox (badness 10000) in paragraph at lines 104--106
 
  []
 
-[2] [3] [4] (report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 272.
- [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 272.
+[2] [3] [4]
+Overfull \hbox (1.54836pt too wide) in paragraph at lines 269--272
+\T1/cmr/m/n/10 To find a max-imum like-li-hood solu-tion for our prob-lem, we s
+hall rely on an \T1/cmr/m/it/10 expectation-maximisation
+ []
+
+[5] (report.bbl)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 307.
+ [6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 307.
  (report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 272.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 272.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 307.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 307.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: A513EA64F90F04E0B89B038142AB25BA;470.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 272.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 307.
  ) 
 Here is how much of TeX's memory you used:
- 9918 strings out of 493323
- 140450 string characters out of 3139062
- 274547 words of memory out of 3000000
- 13254 multiletter control sequences out of 15000+200000
+ 9923 strings out of 493323
+ 140510 string characters out of 3139062
+ 274631 words of memory out of 3000000
+ 13256 multiletter control sequences out of 15000+200000
  25797 words of font info for 70 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,35p,650b,344s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,8n,35p,650b,352s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Andrea\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600
 \ecrm0800.pk> <C:\Users\Andrea\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappe
 n\ec\dpi600\ecrm0600.pk> <C:\Users\Andrea\AppData\Local\MiKTeX\2.9\fonts\pk\ljf
@@ -916,9 +922,9 @@ type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsf
 onts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symb
 ols/msbm10.pfb>
-Output written on report.pdf (5 pages, 291082 bytes).
+Output written on report.pdf (6 pages, 296770 bytes).
 PDF statistics:
- 529 PDF objects out of 1000 (max. 8388607)
- 26 named destinations out of 1000 (max. 500000)
+ 541 PDF objects out of 1000 (max. 8388607)
+ 29 named destinations out of 1000 (max. 500000)
  57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -247,16 +247,16 @@
  	p(\boldsymbol{x}|\boldsymbol{z}) = \prod_{k=1}^{K} \mathcal{N} (\boldsymbol{x} | \boldsymbol{\mu}, \Sigma_{k})^{z_{k}}.
  	\end{equation*}
  	The conditional distribution of $\boldsymbol{z}$ given $\boldsymbol{x}$ is computed considering the theorem of Bayes. Firstly, we let $\gamma(z_{k})= p(z_{k}=1 | \boldsymbol{x})$. We have than
- 	\begin{equation*}
+ 	\begin{equation}\label{eqn::posterior}
  	\gamma(z_{k}) = \frac{p(z_{k}=1)p(\boldsymbol{x}|z_{k} = 1)}{\sum_{j=1}^{K} p(z_{j}=1)p(\boldsymbol{x}|z_{j} = 1)}
  	= \frac{\pi_{k}\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu}_{k}, \Sigma_{k})}{\sum_{j=1}^{K} \pi_{j}\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu}_{j}, \Sigma_{j})}
- 	\end{equation*}
+ 	\end{equation}
  	where, if $\pi_{k}$ is the prior, we have that $\gamma(\pi_{k})$ is the posterior. To put in another way, we can see that $\gamma(\pi_{k})$ is the \textit{responsibility} component $k$ takes for explaining observation $\boldsymbol{x}$.
  	Suppose, then, that we have a set of observations $\{ \boldsymbol{x}_{1}, ..., \boldsymbol{x}_{N} \} $, and we wish to model this data using a mixture of Gaussians. We adopt a matrix representation, so that we have a matrix $X$ in which the $n^{th}$ row is given by $\boldsymbol{x}_{n}^{T}$. In a similar fashion we denote the $N \times K$ matrix $Z$. Assuming that the data points are independent and identically distributed from the distribution, we can write the log-likelihood function as
- 	\begin{equation*}
+ 	\begin{equation}\label{eqn::log_lik}
  	\ln p \left( X | \boldsymbol{\pi}, \boldsymbol{\mu}, \Sigma \right)
  	= \sum_{n=1}^{N} \ln \left\{ \sum_{k=1}^{K} \pi_{k} \mathcal{N} \left( \boldsymbol{x}_{n} | \boldsymbol{\mu}_{k}, \Sigma_{k} \right) \right\}
- 	\end{equation*}
+ 	\end{equation}
  	
  	Maximising this function yields many problems, due to the presence of singularities. In facts, suppose that component $j$ has mean $\boldsymbol{\mu}_{j}$, exactly equal to the data point $\boldsymbol{x}_{n}$ in the data given. This point will contribute to likelihood function as
  	\begin{equation*}
@@ -266,7 +266,42 @@
  	where we have the simplifying hypothesis $\Sigma_{k} = \sigma_{k}^{2} \mathcal{I}$. It is clear that the limit for $\sigma_{j} \to 0$ goes to infinity, and so does the log-likelihood. Thus, the problem is not well posed as such singularities will always be present and will occur whenever one of the Gaussian components collapses on one specific data point.
  	A further issue is given by the fact that for any given maximum likelihood solution, a $K$-component mixture will have a total of $K!$ equivalent solutions. Each of them corresponds to the $K!$ possible ways of assigning $K$ sets of parameters to $K$ components.
  	\subsubsection{EM for Gaussian mixtures}
+ 	To find a maximum likelihood solution for our problem, we shall rely on an \textit{expectation-maximisation} algorithm, or EM algorithm.
+ 	To begin we want to write down the stationarity conditions that must be satisfied by the log-likelihood function.
+ 	Setting the derivative with respect to $\boldsymbol{\mu}_{k}$ of \eqref{eqn::log_lik} to zero, we obtain
+ 	\begin{equation*}
+ 	0 = - \sum_{n=1}^{N} \frac{\pi_{k}\mathcal{N}\left( \boldsymbol{x}_{n} | \boldsymbol{\mu}_{k}, \Sigma_{k} \right)}{\sum_{j=1}^{K} \pi_{j}\mathcal{N}\left( \boldsymbol{x}_{n} | \boldsymbol{\mu}_{j}, \Sigma_{j} \right)} \Sigma_{k} \left( \boldsymbol{x}_{n} - \boldsymbol{\mu}_{k} \right)
+ 	\end{equation*}
+ 	Assuming that $\Sigma_{k}$ is invertible and remembering \eqref{eqn::posterior}, we can multiply by $\Sigma_{k}^{-1}$ and rearranging to obtain
+ 	\begin{equation*}
+ 	\boldsymbol{\mu}_{k} = \frac{1}{N_{k}} \sum_{k=1}^{K} \gamma \left( z_{nk} \right) \boldsymbol{x}_{n},
+ 	\end{equation*}
+ 	where we have defined 
+ 	\begin{equation*}
+ 	N_{k} = \sum_{n=1}^{N} \gamma \left( z_{nk} \right)
+ 	\end{equation*}
  	
+ 	We can interpret $N_{k}$ as the effective number of points assigned to cluster $k$. We also see that the mean $\boldsymbol{\mu}_{k}$ for the $k^{th}$ Gaussian components is obtained by taking a weighted mean of all the points of the data set, in which the weight is given by the posterior probability $\gamma \left( z_{nk} \right)$ that component $k$ was responsible for generating $\boldsymbol{x}_{n}$.
+ 	
+ 	If we set the derivative of \eqref{eqn::log_lik} with respect t $\Sigma_{k}$ to zero and follow a similar line of reasoning, we obtain
+ 	\begin{equation*}
+ 	\Sigma_{k} = \frac{1}{N_{k}} \sum_{n=1}^{N} \gamma \left( z_{nk} \right) \left( \boldsymbol{x}_{n} - \boldsymbol{\mu}_{k} \right) \left( \boldsymbol{x}_{n} - \boldsymbol{\mu}_{k} \right)^{T},
+ 	\end{equation*}
+ 	which has the same form as the corresponding result for a single Gaussian but with each data point weighted according to its posterior probability.
+ 	Finally, we maximise \eqref{eqn::log_lik} with respect to the mixing coefficients $\pi_{k}$. Considering that they must sum to one, we have to maximise (introducing Lagrange multipliers)
+ 	\begin{equation*}
+ 	\ln p \left( X | \boldsymbol{\pi}, \boldsymbol{\mu}, \Sigma  \right) + 
+ 	\lambda \left( \sum_{k=1}^{K} \pi_{k} - 1 \right),
+ 	\end{equation*}
+ 	which gives
+ 	\begin{equation*}
+ 	0 = \sum_{n=1}^{N} \frac{ \pi_{k}  \mathcal{N} \left( \boldsymbol{x}_{n} | \boldsymbol{\mu}_{k}, \Sigma_{k} \right)}{\sum_{j=1}^{K} \pi_{j} \mathcal{N} \left( \boldsymbol{x}_{n} | \boldsymbol{\mu}_{j}, \Sigma_{j} \right)} + \lambda.
+ 	\end{equation*}
+ 	Multiply by $\pi_{k}$ and summing over $k$ yields $N = - \lambda$. Thus
+ 	\begin{equation*}
+ 	\pi_{k} = \frac{N_{k}}{N},
+ 	\end{equation*}
+ 	so that the mixing coefficients is given by the average responsibility that components carry in explaining the data points.
 	\bibliographystyle{alpha}
 	\bibliography{bibliography}	
 \end{document}
