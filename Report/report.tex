@@ -220,6 +220,38 @@
 	DBSCAN can be viewed from another point of view. In fact, we can see it as a search for connected components in a graph with the following characteristics: the vertices corresponds to the core points in the dataset and there exists an (undirected) edge between two vertices (core points) if the distance between them is less than $\varepsilon$, that is to say, if each of them is in the $\varepsilon$-neighbourhood of the other point.
 	The connected components of this graph correspond to the core points of each cluster. Next, every core point incorporates into its cluster any border points in its neighbourhood.
 	The biggest drawback of DBSCAN is given by its sensitivity to the value of $\varepsilon$, in particular if clusters have different densities. What happens is that is $\varepsilon$ is too small, than sparser clusters will be categorised as noise and if it is too large different clusters might end up being grouped together.
+	
+	\subsection{Gaussian Mixture}
+	In order to introduce Gaussian Mixture models, we shall be relying mainly on \cite{Bishop:2006}.
+	A Gaussian mixture distribution can be written as a linear superposition of Gaussians in the form
+	\begin{equation}\label{eqn::gauss_mix}
+	p(\boldsymbol{x}) = \sum_{k=1}^{K} \pi_{k} \mathcal{N} \left( \boldsymbol{x}  | \boldsymbol{\mu}_{k}, \Sigma_{k} \right)
+ 	\end{equation}
+ 	
+ 	However, it is possible to rewrite \eqref{eqn::gauss_mix} as follows. Let us a introduce a $K$-dimensional binary random variable $\boldsymbol{z}$ having a $1$-of-$K$ representation so that a particular element $z_{k}=1$ and all the other elements are equal to $0$. We have that $\sum_{k} z_{k} = 1$ and that, for all $k$, $z_{k} \in \{ 0, 1 \}$. We can see that there are $K$ possible states for which no element of $\boldsymbol{z}$ is zero.
+ 	We now proceed to defining the joint distribution of $p(\boldsymbol{x}, \boldsymbol{z})$ as $p(\boldsymbol{x}|\boldsymbol{z})p(\boldsymbol{z})$.
+ 	We set
+ 	\begin{equation*}
+ 	p(z_{k} = 1) = \pi_{k},
+ 	\end{equation*}
+ 	with $ \pi_{k} \in \left[0,1 \right] $ and $\sum_{k=1}^{K} \pi_{k} = 1 $, which we can rewrite
+ 	\begin{equation*}
+ 	p(\boldsymbol{z}) = \prod_{k=1}^{K} \pi_{k}^{z_{k}}.
+ 	\end{equation*}
+ 	Similarly, we the conditional distribution of $\boldsymbol{x}$ given $\boldsymbol{z}$ is
+ 	\begin{equation*}
+ 	p(\boldsymbol{x}|z_{k} = 1) = \mathcal{N} \left( \boldsymbol{x} | \boldsymbol{\mu}, \Sigma_{k} \right).
+ 	\end{equation*}
+ 	We can rewrite the last equation as
+ 	\begin{equation*}
+ 	p(\boldsymbol{x}|\boldsymbol{z}) = \prod_{k=1}^{K} \mathcal{N} (\boldsymbol{x} | \boldsymbol{\mu}, \Sigma_{k})^{z_{k}}.
+ 	\end{equation*}
+ 	The conditional distribution of $\boldsymbol{z}$ given $\boldsymbol{x}$ is computed considering the theorem of Bayes. Firstly, we let $\gamma(z_{k})= p(z_{k}=1 | \boldsymbol{x})$. We have than
+ 	\begin{equation*}
+ 	\gamma(z_{k}) = \frac{p(z_{k}=1)p(\boldsymbol{x}|z_{k} = 1)}{\sum_{j=1}^{K} p(z_{j}=1)p(\boldsymbol{x}|z_{j} = 1)}
+ 	= \frac{\pi_{k}\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu}_{k}, \Sigma_{k})}{\sum_{j=1}^{K} \pi_{j}\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu}_{j}, \Sigma_{j})}
+ 	\end{equation*}
+ 	where, if $\pi_{k}$ is the prior, we have that $\gamma(\pi_{k})$ is the posterior. To put in another way, we can see that $\gamma(\pi_{k})$ is the \textit{responsibility} component $k$ takes for explaining observation $\boldsymbol{x}$.
 	\bibliographystyle{alpha}
 	\bibliography{bibliography}	
 \end{document}

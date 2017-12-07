@@ -1,5 +1,10 @@
 \begin{thebibliography}{EKSX96}
 
+\bibitem[Bis06]{Bishop:2006}
+Christopher~M. Bishop.
+\newblock {\em Pattern Recognition and Machine Learning}.
+\newblock Springer New York Inc., New York, NY, USA, 2006.
+
 \bibitem[EKSX96]{Ester96adensity-based}
 Martin Ester, Hans-Peter Kriegel, Jörg Sander, and Xiaowei Xu.
 \newblock A density-based algorithm for discovering clusters in large spatial
@@ -20,6 +25,6 @@ Richard~A. Johnson and Dean~W. Wichern.
 \bibitem[ZWM14]{zaki2014dataminingbook}
 Mohammed~J. Zaki and Jr. Wagner~Meira.
 \newblock {\em Data Mining and Analysis: Fundamental Concepts and Algorithms}.
-\newblock Cambridge University Press, May 2014.
+\newblock Cambridge University Press, Cambridge, UK, May 2014.
 
 \end{thebibliography}

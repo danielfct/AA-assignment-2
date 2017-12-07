@@ -56,4 +56,12 @@
   url             = {http://research.microsoft.com/en-us/um/people/cmbishop/prml/},
 }
 
+@InProceedings{Ester96adensity-based,
+  author    = {Martin Ester and Hans-Peter Kriegel and Jörg Sander and Xiaowei Xu},
+  title     = {A density-based algorithm for discovering clusters in large spatial databases with noise},
+  year      = {1996},
+  pages     = {226--231},
+  publisher = {AAAI Press},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
