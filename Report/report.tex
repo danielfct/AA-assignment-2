@@ -55,6 +55,9 @@
 	\end{abstract}
 
 	\section{Introduction}
+	\subsection{A brief overview of clustering}
+	\subsection{Assessing the fitness of clustering}
+	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
 	\subsection{K-Means Algorithm}
 	In our exposition of the K-Means Algorithm we rely heavily on \cite{hastie01statisticallearning}, \cite{MR2372475} and \cite{zaki2014dataminingbook}.
@@ -184,6 +187,9 @@
 		\end{enumerate}
 		\item Termination occurs when cluster assignments stop changing
 	\end{enumerate}
+	
+	\subsubsection{Choosing the number of clusters}
+	In order to choice the number of clusters that seemed to yield the best results, we decided to run the algorithm for different values of $k$ 
 	
 	\subsection{DBSCAN}
 	In our analysis of the DBSCAN algorithm, we shall be relying mainly on \cite{Ester96adensity-based} and \cite{zaki2014dataminingbook}. The necessity of an algorithm adopting a different philosophy with respect to that of the K-Means algorithm arises from the fact that representative methods (such as the latter or, for instance, EM methods) are suitable for finding, at best, convex clusters.
