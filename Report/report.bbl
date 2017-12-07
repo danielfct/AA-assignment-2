@@ -22,6 +22,11 @@ Richard~A. Johnson and Dean~W. Wichern.
 \newblock {\em Applied multivariate statistical analysis}.
 \newblock Pearson Prentice Hall, Upper Saddle River, NJ, sixth edition, 2007.
 
+\bibitem[LRU14]{9781107077232}
+Jure Leskovec, Anand Rajaraman, and Jeffrey~David Ullman.
+\newblock {\em Mining of Massive Datasets}.
+\newblock Cambridge University Pr., 2014.
+
 \bibitem[ZWM14]{zaki2014dataminingbook}
 Mohammed~J. Zaki and Jr. Wagner~Meira.
 \newblock {\em Data Mining and Analysis: Fundamental Concepts and Algorithms}.

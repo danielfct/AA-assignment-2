@@ -56,6 +56,18 @@
 
 	\section{Introduction}
 	\subsection{A brief overview of clustering}
+	Clustering is the process of examining a collection of "points", and grouping the points into "clusters" according to some distance measure. The goal is for points in the same clusters to have a small distance from one another, while points in different clusters are at a large distance from one another (\cite{9781107077232}).
+	In this sense, clustering is helpful when it comes to understanding the structure of the data at hands, especially when dealing with high dimensional datasets. Clustering can provide us with a representation of the data that can facilitate gaining some meaningful insight into their structure. Moreover, it can be applied to reduce complexity and summarise data when this may be needed.\\
+	
+	A dataset suitable for clustering is a collection of points $\left\{ \boldsymbol{x}_{i} \right\}_{i=1}^{N} \subset \mathcal{X}$. In a general setting, $\mathcal{X}$ can be any abstract space, but it is often the case that it is a Euclidean space. To perform clustering we need to endow $\mathcal{X}$ with a distance measure (or metric) $\delta$. Note that a metric on a set $\mathcal{X}$ is a function $\delta : \mathcal{X} \times \mathcal{X} \to \left[0,+\infty\right)$ such that for all $x, y, z \in \mathcal{X}$
+	\begin{itemize}
+	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right)\geq 0$
+	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right) = 0 \iff x = y$
+	\item $\delta \left( \boldsymbol{x}, \boldsymbol{y} \right) = \delta \left( \boldsymbol{y}, \boldsymbol{x} \right) $
+	\item $ \delta \left( \boldsymbol{x}, \boldsymbol{z} \right) \leq \delta \left( \boldsymbol{x}, \boldsymbol{y} \right) + \delta \left( \boldsymbol{y}, \boldsymbol{z} \right) $
+	\end{itemize}
+	
+	
 	\subsection{Assessing the fitness of clustering}
 	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
