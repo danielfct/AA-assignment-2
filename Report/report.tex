@@ -170,6 +170,27 @@
 			Adjusted Rand Index = \frac{\sum_{i=1}^{r} \sum_{j=1}^{k} {n_{ij}\choose{2}} - \frac{\sum_{i=1}^{r}{n_{i}\choose{2}}  \sum_{j=1}^{k}{m_{j}\choose{2}}}{{{n}\choose{2}}}}{\frac{1}{2}\left[\sum_{i=1}^{r} {{n_{i}}\choose{2}} + \sum_{j=1}^{k} {{m_{j}}\choose{2}} \right] - \frac{\left[\sum_{i=1}^{r} {{n_{i}}\choose{2}}  \sum_{j=1}^{k} {{m_{j}}\choose{2}} \right]}{{{n}\choose{2}}}}
 			\end{equation*}
 		\end{description}
+	We now move on to describing the internal index we are going to use.
+	\begin{description}
+		\item[Silhouette Coefficient] The silhouette coefficient is a measure of cohesion and separation of clusters. It is based on the difference between the average distance to points in the closest cluster and to points in the same clusters. For each point $\boldsymbol{x_{i}}$, we calculate its silhouette coefficient $s_{i}$ as
+		\begin{equation*}
+		s_{i} = \frac{\mu_{out}^{\min}\left(\boldsymbol{x}_{i}\right) - \mu_{in}\left(\boldsymbol{x}_{i}\right)}{\max\left\{\mu_{out}^{\min}\left(\boldsymbol{x}_{i}\right), \mu_{in}\left(\boldsymbol{x}_{i}\right) \right\}},
+		\end{equation*}
+		where $\mu_{in}\left( \boldsymbol{x}_{i} \right)$ is the mean distance from $\boldsymbol{x}_{i}$ to points in its own cluster $\hat{y}_{i}$:
+		\begin{equation*}
+		\mu_{in}\left( \boldsymbol{x}_{i} \right) = \frac{\sum_{\boldsymbol{x}_{j} \in C_{\hat{y}_{i}}, j \neq i} \delta \left(\boldsymbol{x}_{i}, \boldsymbol{x}_{j}\right)}{n_{\hat{y}_{i}} - 1}
+		\end{equation*}
+		and
+		\begin{equation*}
+		\mu_{out}^{\min} \left(\boldsymbol{x}_{i}\right) = \min_{j \neq \hat{y}_{i}} \left\{ \frac{\sum_{\boldsymbol{y} \in C_{j}} \delta \left(\boldsymbol{x}_{i}, \boldsymbol{y}\right)} {n_{j}} \right\}
+		\end{equation*}
+		The $s_{i}$ value of a point always lies in the interval $\left[-1,1\right]$. A value closer to $+1$ indicates that $\boldsymbol{x}_{i}$ is much closer to points in its own cluster than to points in other clusters. A value close to zero indicates that $\boldsymbol{x}_{i}$ is close to the boundary and a value close to $-1$ indicates that $\boldsymbol{x}_{i}$ is closer to another cluster than it is to its own.
+		The silhouette coefficient is defined as
+		\begin{equation*}
+		SC = \frac{1}{n} \sum_{i=1}^{n} s_{i}
+		\end{equation*}
+		and, as it is natural, a value close to $+1$ indicates a good clustering.
+	\end{description}
 	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
 	\subsection{K-Means Algorithm}
