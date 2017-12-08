@@ -148,7 +148,7 @@ def contingency_matrix(labels_true, labels_pred):
 def positive_negative(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
     contingency_table= contingency_matrix(labels_true, labels_pred)
-    print(contingency_table)
+    #print(contingency_table)
         #checking dimensions match
     n= contingency_table.sum()
     if (labels_true.shape[0] != n):
