@@ -100,6 +100,7 @@
 	n_{ij} = | C_{i} \cap T_{j} |.
 	\end{equation*}
 	In other words, the count $n_{ij}$ denotes the number of points that are common to cluster $C_{i}$ and to the ground-truth partition $T_{j}$.
+	Further, we let $n_{i} = \left| C_{i} \right|$ and $m_{j} = \left| T_{j} \right|$.
 	Let then $\boldsymbol{x_{i}}, \boldsymbol{x_{j}} \in \mathcal{D}$ be any two points such that $i \neq j$. If both $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong to the same cluster, or, equivalently, if $\hat{y}_{i} = \hat{y}_{j}$, we call it a \textit{positive} event and if they do not belong to the same cluster, that is if $\hat{y}_{i} \neq \hat{y}_{j}$, we call that a \textit{negative} event. Depending on whether there is agreement between the cluster labels and the partition labels, we thus have four possibilities to consider.
 	\begin{itemize}
 		\item[True Positives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong both to the same partition in $\mathcal{T}$ and to the same cluster in $\mathcal{C}$. We have a true positive pair because the positive event correspond to the ground truth.
@@ -128,7 +129,20 @@
 		TP = \sum_{i=1}^{r} \sum_{j=1}^{k} {{n_{ij}}\choose{2}} = \sum_{i=1}^{r} \sum_{j=1}^{k} \frac{n_{ij}\left(n_{ij} - 1\right)}{2}  = \frac{1}{2} \left( \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} - \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij} \right) = \frac{1}{2} \left( \left( \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right) - n \right).
 		\end{equation*}
 		This follows from the fact that each pair of points among the $n_{ij}$ share the same cluster label $i$ and the same partition label $j$ and of course the last step follows from the fact that $\sum_{i=1}^{r} \sum_{j=1}^{k} = n$.
-	
+		To compute the total number of false negatives, we have to remove the number of true positives from the number of pairs that belong to the same partition. Because two points $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ that belong to the same partition have $y_{i} = y_{j}$, if we remove true positives we are left with pairs for which $\hat{y}_{i} \neq \hat{y}_{j}$, which is exactly the false negatives.
+		This yields
+		\begin{equation*}
+		FN = \sum_{j=1}^{k} {{m_{ij}}\choose{2}} - TP = \frac{1}{2} \left( \sum_{j=1}^{k} m_{j}^{2} - \sum_{j=1}^{k} m_{j} - \sum_{i=1}^{r}\sum_{j=1}^{k} n_{ij}^{2} + n \right) = \frac{1}{2} \left( \sum_{j=1}^{k} m_{j}^{2} - \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right).
+		\end{equation*}
+		The number of false positives can be obtained in a very similar fashion:
+		\begin{equation*}
+		FP = \sum_{i=1}^{r} {n_{i}\choose{2}} - TP = \frac{1}{2}\left( \sum_{i=1}^{r} n_{i} - \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right).
+		\end{equation*}
+		To conclude, we can find the true negatives by doing
+		\begin{equation*}
+		TN = N - \left( TP + FN + FP \right) = \frac{1}{2} \left( n^{2} - \sum_{i=1}^{r} n_{i}^{2} - \sum_{j=1}^{k} m_{j}^{2} + \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right).
+		\end{equation*}
+		In this way, we can compute the values in $O\left(rk\right)$ time. As the contingency table can be obtained in linear time, the total time is $O\left(n + rk\right)$.
 	
 	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
