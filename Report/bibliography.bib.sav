@@ -1,0 +1,92 @@
+% Encoding: UTF-8
+
+@Book{MR2372475,
+  title     = {Applied multivariate statistical analysis},
+  publisher = {Pearson Prentice Hall, Upper Saddle River, NJ},
+  year      = {2007},
+  author    = {Johnson, Richard A. and Wichern, Dean W.},
+  edition   = {Sixth},
+  isbn      = {978-0131877153},
+  mrclass   = {62-01 (62H15 62H25 62H30)},
+  mrnumber  = {2372475},
+  pages     = {xx+773},
+  url       = {https://www.amazon.com/Applied-Multivariate-Statistical-Analysis-6th/dp/0131877151?SubscriptionId=0JYN1NVW651KCA56C102&tag=techkie-20&linkCode=xm2&camp=2025&creative=165953&creativeASIN=0131877151},
+}
+
+@Book{hastie01statisticallearning,
+  title     = {The Elements of Statistical Learning},
+  publisher = {Springer New York Inc.},
+  year      = {2001},
+  author    = {Hastie, Trevor and Tibshirani, Robert and Friedman, Jerome},
+  series    = {Springer Series in Statistics},
+  address   = {New York, NY, USA},
+  isbn      = {978-0387848570},
+  added-at  = {2008-05-16T16:17:42.000+0200},
+  biburl    = {https://www.bibsonomy.org/bibtex/2f58afc5c9793fcc8ad8389824e57984c/sb3000},
+  date      = {2009-02-01},
+  ean       = {9780387848570},
+  interhash = {d585aea274f2b9b228fc1629bc273644},
+  intrahash = {f58afc5c9793fcc8ad8389824e57984c},
+  keywords  = {ml statistics},
+  pagetotal = {745},
+  timestamp = {2008-05-16T16:17:43.000+0200},
+  url       = {http://www.ebook.de/de/product/8023140/trevor_hastie_robert_tibshirani_jerome_friedman_the_elements_of_statistical_learning.html},
+}
+
+@Book{zaki2014dataminingbook,
+  title     = {Data Mining and Analysis: Fundamental Concepts and Algorithms},
+  publisher = {Cambridge University Press},
+  year      = {2014},
+  author    = {Mohammed J. Zaki and Wagner Meira, Jr.},
+  address   = {Cambridge, UK},
+  month     = {May},
+  isbn      = {9780521766333},
+  date      = {2015-07-17},
+  ean       = {9780521766333},
+  pagetotal = {562},
+  url       = {http://www.ebook.de/de/product/22290268/mohammed_j_zaki_data_mining_and_analysis.html},
+}
+
+@Article{scikit-learn,
+  author  = {Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.},
+  title   = {Scikit-learn: Machine Learning in {P}ython},
+  journal = {Journal of Machine Learning Research},
+  year    = {2011},
+  volume  = {12},
+  pages   = {2825--2830},
+}
+
+@Book{Bishop:2006,
+  title           = {Pattern Recognition and Machine Learning},
+  publisher       = {Springer New York Inc.},
+  year            = {2006},
+  author          = {Bishop, Christopher M.},
+  address         = {New York, NY, USA},
+  isbn            = {978-0387-31073-2},
+  bib2html_rescat = {General ML},
+  date            = {2006-08-17},
+  ean             = {9780387310732},
+  pagetotal       = {738},
+  url             = {http://research.microsoft.com/en-us/um/people/cmbishop/prml/},
+}
+
+@InProceedings{Ester96adensity-based,
+  author    = {Martin Ester and Hans-Peter Kriegel and Jörg Sander and Xiaowei Xu},
+  title     = {A density-based algorithm for discovering clusters in large spatial databases with noise},
+  year      = {1996},
+  pages     = {226--231},
+  publisher = {AAAI Press},
+}
+
+@Book{9781107077232,
+  title     = {Mining of Massive Datasets},
+  publisher = {Cambridge University Pr.},
+  year      = {2014},
+  author    = {Leskovec, Jure and Rajaraman, Anand and Ullman, Jeffrey David},
+  isbn      = {9781107077232},
+  date      = {2014-11-13},
+  ean       = {9781107077232},
+  url       = {http://www.ebook.de/de/product/22646520/jure_leskovec_anand_rajaraman_jeffrey_david_ullman_mining_of_massive_datasets.html},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

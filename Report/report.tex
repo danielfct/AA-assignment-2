@@ -79,7 +79,56 @@
 	\end{enumerate}
 
 	The clustering algorithms considered in this work, namely the K-Means, the DBSCAN and the Gaussian mixture models, are partitional clustering algorithms working in Euclidean spaces. What is more, given the dimensionality of our dataset we will be working on the main memory of the computer, thus avoiding all the issues caused by highly-dimensional data.
-	\subsection{Assessing the fitness of clustering}
+	\subsection{Clustering Validation}
+	Given the wide variety of existing clustering methods, it is of vital importance to develop objective approaches to validate and assess clustering results. In this sense, three different tasks arise naturally: \textit{clustering evaluation} seeks to estimate the quality of the clustering, \textit{clustering stability} seeks to assess how sensitive a given algorithm is with respect to its parameters and \textit{clustering tendency} aims at understanding whether it is the case to apply clustering in the first place (\cite{zaki2014dataminingbook}).
+	We can divide the numerous validity measures and statistics into three main categories.
+	\begin{description}
+		\item[External] External validation measures employ criteria that are not inherently present in the dataset. For instance, we can have prior or expert-specified clusters.
+		\item[Internal] Internal validation measures employ criteria that are based on the data provided for the clustering, such as measure of intra-cluster and inter-cluster dispersion.
+		\item[Relative] Relative validation measures aim to directly compare different types of clusterings, usually obtained setting the parameters of one given algorithms in different ways.
+	\end{description}
+	We hereby introduce five external indices, precision, recall, F1-score, the Rand index and the adjusted Rand index, and one internal index, the silhouette coefficient.
+	Before, however, we will require some notations.
+	Let $\mathcal{D} = \left\{ \boldsymbol{x_{j}} \right\}_{j=1}^{n} \subset \mathcal{X}$ be a dataset containing $n$ points such that the dimension of $\mathcal{X}$ is equal to $d$, which we have partitioned into $k$ clusters. Let $y_{i} \in \left\{ 1, 2, ..., k \right\} $ denote the ground-truth cluster membership (or label information) for each point. The ground-truth clustering can be expressed as $\mathcal{T} = \left\{ T_{1}, T_{2}, ..., T_{k} \right\}$, where $T_{j} = \left\{ \boldsymbol{x}_{i} \in \mathcal{D} | y_{i} = j \right\}$. Moreover, let $\mathcal{C} = \left\{ C_{1}, ...., C_{r} \right\} $ denote a clustering on the same dataset into $r$ clusters, obtained by means of a certain clustering algorithm. We let $\hat{y}_{i} \in \left\{ 1, 2, ...., r \right\}$ denote the cluster label for $\boldsymbol{x}_{i}$. For the sake of clarity, we shall refer henceforth to $\mathcal{T}$ as \textit{partitioning} and to each $T_{i}$ as \textit{partition}. In a similar fashion, $\mathcal{C}$ will be denoted as a clustering and each $C_{i}$ as a cluster.
+	External validation measures try to capture the extent to which points belonging to the same partition appear in the same clusters and, of course, the extent to which points belonging to different partitions are grouped into different clusters. Note that there is usually a trade-off between these two goals, either captured by a measure or implicitly present in its computation. 
+	External partition relies on the $r \times k$ \textit{contingency table} $N$ that is induced by the clustering $\mathcal{C}$ and the ground-truth partitioning $\mathcal{T}$ defined as follows:
+	\begin{equation*}
+	N = \left\{ n_{ij} \right\}
+	\end{equation*}
+	where
+	\begin{equation*}
+	n_{ij} = | C_{i} \cap T_{j} |.
+	\end{equation*}
+	In other words, the count $n_{ij}$ denotes the number of points that are common to cluster $C_{i}$ and to the ground-truth partition $T_{j}$.
+	Let then $\boldsymbol{x_{i}}, \boldsymbol{x_{j}} \in \mathcal{D}$ be any two points such that $i \neq j$. If both $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong to the same cluster, or, equivalently, if $\hat{y}_{i} = \hat{y}_{j}$, we call it a \textit{positive} event and if they do not belong to the same cluster, that is if $\hat{y}_{i} \neq \hat{y}_{j}$, we call that a \textit{negative} event. Depending on whether there is agreement between the cluster labels and the partition labels, we thus have four possibilities to consider.
+	\begin{itemize}
+		\item[True Positives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong both to the same partition in $\mathcal{T}$ and to the same cluster in $\mathcal{C}$. We have a true positive pair because the positive event correspond to the ground truth.
+		\begin{equation*}
+		TP = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} = y_{j}, \hat{y}_{i} = \hat{y}_{j} \right\}\right|
+		\end{equation*}
+		\item[False Negatives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong to the same partition in $\mathcal{T}$ but to different clusters in $\mathcal{C}$. Thus, the negative event does not correspond to the truth.
+		\begin{equation*}
+		FN = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} = y_{j}, \hat{y}_{i} \neq \hat{y}_{j} \right\}\right|
+		\end{equation*}
+		\item[False Positives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ do not belong to the same partition in $\mathcal{T}$ but they do belong to the same cluster in $\mathcal{C}$. The positive event is therefore false.
+		\begin{equation*}
+		FP = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} \neq y_{j}, \hat{y}_{i} = \hat{y}_{j} \right\}\right|
+		\end{equation*}
+		\item[True Negative] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ neither belong to the same partition in $\mathcal{T}$ nor to the same cluster in $\mathcal{C}$. The false event is therefore true.
+		\begin{equation*}
+		TN = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} \neq y_{j}, \hat{y}_{i} \neq \hat{y}_{j} \right\}\right|
+		\end{equation*}
+		\end{itemize}
+		The total pair of points is given by $N = \frac{n\left(n-1\right)}{2}$ and we have the following identity:
+		\begin{equation*}
+		N = TP + FN + FP + TN.
+		\end{equation*}
+		A naive computation of the preceding four cases requires $O\left(n^{2}\right)$ time. However, there is a more efficient way to proceed with the calculations, considering the contingency table $N = \left\{ n_{ij} \right\}$ with $1 \leq i \leq r$ and $1 \leq j \leq k$. The number of true positives is then
+		\begin{equation*}
+		TP = \sum_{i=1}^{r} \sum_{j=1}^{k} {{n_{ij}}\choose{2}} = \sum_{i=1}^{r} \sum_{j=1}^{k} \frac{n_{ij}\left(n_{ij} - 1\right)}{2}  = \frac{1}{2} \left( \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} - \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij} \right) = \frac{1}{2} \left( \left( \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right) - n \right).
+		\end{equation*}
+		This follows from the fact that each pair of points among the $n_{ij}$ share the same cluster label $i$ and the same partition label $j$ and of course the last step follows from the fact that $\sum_{i=1}^{r} \sum_{j=1}^{k} = n$.
+	
 	
 	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
