@@ -138,7 +138,7 @@
 		\end{equation*}
 		The number of false positives can be obtained in a very similar fashion:
 		\begin{equation*}
-		FP = \sum_{i=1}^{r} {n_{i}\choose{2}} - TP = \frac{1}{2}\left( \sum_{i=1}^{r} n_{i} - \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right).
+		FP = \sum_{i=1}^{r} {n_{i}\choose{2}} - TP = \frac{1}{2}\left( \sum_{i=1}^{r} n_{i}^{2} - \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right).
 		\end{equation*}
 		To conclude, we can find the true negatives by doing
 		\begin{equation*}
@@ -151,12 +151,12 @@
 			\begin{equation*}
 			\frac{TP}{TP + FP},
 			\end{equation*}
-			obtaining an index that gives us a measure of the fraction of the positive events that are true. Note that the index will always be contained in $\left[0,1\right]$.
+			obtaining an index that gives us the fraction of true, or correctly classified, point pairs compared to all the point pairs in the same clusters. Note that the index will always be contained in $\left[0,1\right]$.
 			\item[Recall] Recall, in the context of information retrieval, is defined as the fraction of relevant documents that are actually retrieved. As done before, we define it by analogy
 			\begin{equation*}
 			\frac{TP}{TP + FN}.
 			\end{equation*}
-			Here we measure how many positive events the algorithm has scored amongst true events. Note that the index will always be contained in $\left[0,1\right]$.
+			Here we measure the fraction of correctly labelled points pairs compared to all the points pairs in the same partition. Note that the index will always be contained in $\left[0,1\right]$.
 			\item[F1-Score] The F1-Score is defined to be the harmonic mean between precision and recall:
 			\begin{equation*}
 			2\frac{precision \cdot recall}{precision + recall}
@@ -341,13 +341,42 @@
 	
 	\subsubsection{Choosing the number of clusters}
 	In order to choice the number of clusters that seemed to yield the best results, we decided to run the algorithm for different values of $k$, from $1$ to $100$. The results are shown in Figure \ref{fig:kmeans}.
+	First of all, we can point out that there appear to be an inverse correlation between precision and recall, as expected. In facts, as the number of clusters grows we have an increased rate of false negatives. This is given to the fact that the increased number of clusters makes it more likely to have points belonging to the same partition that are classified into different clusters. On the other hand, increasing $k$ implies a decrease in false positives as it is more unlikely that points belonging to the same partition are clustered into different clusters.
+	The trade-off is also evident considering the F1-Score, that performs better when we have high recall and a good value for the precision (that could anyway improve allowing for greater $k$).
+	It is interesting to see that the number of clusters suggested by precision and recall are very different. In this sense, the best choice depends very much on what it is important to maximise: whether it is the fraction of positive events that are true compared to the point in the same cluster or the fraction of correctly labelled point within a cluster with respect to al the points pairs in the same partition.
+	The Rand index and the adjuster Rand index suggests a similar number of clusters (if we consider the number that we obtain considering the "elbow" in the Rand index plot). However, we see how the adjusted Rand index deteriorates when we pass that number: it is due to the correction for chance done by the index.
+	As far as the Silhouette coefficient is concerned, we see that we obtain again a suggested value between $20$ and $40$, where we have a good balance between cohesion and separation of clusters. We obtain a result that substantially agree with the last three external indices.
+	This may be due to the intrinsic nature of the K-Means algorithm, that has to rely on convex-shaped clusters and cannot therefore adapt too much to the domain at hands, characterised by rather "prolonged" clusters in shape (as it is often the case with geophysical data): with a small number of clusters we have a good recall, that we pay in terms of precision, and as soon as we try to augment it we see that we lose in terms of fidelity to the original partitioning.
+	We provide a representation of the clustering induced (Figure \ref{fig:kmeans_world}) considering the best value obtained by means of the Silhouette score, which should not be too different from the clustering induced by the F1-Score, the Rand index and the adjusted Rand index as already explained.
+	In Table \ref{table:kmeans}, we report the indices we obtain maximising for each of them.\\
 	
+	\begin{table}[h!]
+		\centering	
+		\begin{tabular}{l*{6}{c}r}
+			Index              & Precision & Recall & F1-Score & Rand Index & Adjusted Rand Index  & Silhouette Score & $k$ \\
+			\hline
+			Prec. 		& 0.761 & 0.093 & 0.166 & 0.812 & 0.147 & 0.496 & 146  \\
+			Recall          & 0.127 & 0.791 & 0.219 & -0.131!! &  0.056 & 0.481 &  2  \\
+			F1-Sc.        & 0.347 & 0.667 & 0.457 & 0.681 &  0.374 & 0.374 &  6  \\
+			Rand Ind.      & 0.619 & 0.244 & 0.350 & 0.818 &  0.311 & 0.516 &  39  \\
+			Adj. Rand Ind. & 0.575 & 0.352 & 0.437 & 0.817 &  0.390 & 0.507 &  22  \\
+			Silh. Score & 0.524 & 0.299 & 0.380 & 0.804 &  0.332 & 0.528 &  25  \\
+		\end{tabular}
+	\caption{Values of the Precision, Recall, F1-Score, Rand index, adjusted Rand index and Silhouette score at the $k$ maximising the index considered in the row.}
+	\label{table:kmeans}
+	\end{table}
+	
+
 	\begin{figure}
 		\includegraphics[width=\linewidth]{kmeans_indeces.pdf}
-		\caption{Precision, Recall, F1-Score, Rand Index, Adjusted Rand Index and Silhouette Score for the K-Means algorithms at different values of k.}
+		\caption{Precision, Recall, F1-Score, Rand Index, Adjusted Rand Index and Silhouette Score for the K-Means algorithms at different values of $k$.}
 		\label{fig:kmeans}
 	\end{figure}
-	
+	\begin{figure}
+		\includegraphics[width=\linewidth]{kmeans_world.png}
+		\caption{Representation of the clustering obtained applying the K-Means algorithm with $k= 25$.}
+		\label{fig:kmeans_world}
+	\end{figure}
 	
 	\subsection{DBSCAN}
 	In our analysis of the DBSCAN algorithm, we shall be relying mainly on \cite{Ester96adensity-based} and \cite{zaki2014dataminingbook}. The necessity of an algorithm adopting a different philosophy with respect to that of the K-Means algorithm arises from the fact that representative methods (such as the latter or, for instance, EM methods) are suitable for finding, at best, convex clusters.

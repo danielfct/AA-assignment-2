@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Fri Dec  8 19:58:31 2017
+
+@author: Andrea
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Fri Dec  8 16:27:06 2017
 
 @author: Andrea
@@ -17,6 +24,7 @@ from scipy import sparse as sp
 import sklearn
 from sklearn import mixture
 import itertools
+from sklearn.metrics import confusion_matrix
 
 FILENAME = 'tp2_data.csv'
 RADIUS = 6371
@@ -167,24 +175,37 @@ def contingency_matrix(labels_true, labels_pred, eps=None, sparse=False):
 
 def clustering_evaluation(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
-    c= contingency_matrix(labels_true, labels_pred, sparse= True)
-    print(c)
+    c= contingency_matrix(labels_true, labels_pred, sparse= False)
+    print(type(c))
+    #print(c)
     n_samples, = labels_true.shape
-    print(n_samples)
+    #print(n_samples)
     tk = np.int64(np.dot(c.data, c.data) - n_samples)
-    print(tk)
+    #print(tk)
     pk = np.int64(np.sum(np.asarray(c.sum(axis=0)).ravel() ** 2) - n_samples)
     qk = np.int64(np.sum(np.asarray(c.sum(axis=1)).ravel() ** 2) - n_samples)
     N= np.int64(n_samples) * (np.int64(n_samples)-1) / 2
     TP= tk
-    print(TP)
+    #print(TP)
     FP= pk - tk
     FN= qk - tk
     TN= N - TP - FP - FN
-    print(N)
-    print(TP + FP + FN)
-    print(TN)
+    #print(N)
+   # print(TP + FP + FN)
+    #print(TN)
     return TP, TN, FP, FN
+
+def contingency(labels_true, labels_pred):
+    return np.array(confusion_matrix(labels_true, labels_pred), dtype= np.int64)
+
+def true_positive(labels_true, labels_pred):
+    contingency_matrix= contingency(labels_true, labels_pred)
+    square_contingency_matrix= np.square(contingency_matrix, dtype= np.int64)
+    TP= np.array(0.5, dtype= np.float64) * (square_contingency_matrix.sum() - labels_true.shape[0])
+    return TP
+    
+def false_negative(labels_true, labels_pred):
+    
 
 def precision(labels_true, labels_pred):
     TP, TN, FP, FN= clustering_evaluation(labels_true, labels_pred)
@@ -219,51 +240,14 @@ def silhouette(X, labels_pred):
 def evaluate_cluster(X, labels_true, labels_pred):
     return np.array([precision(labels_true, labels_pred), recall(labels_true, labels_pred), f1_score(labels_true, labels_pred), rand_index(labels_true, labels_pred), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
 
-################### KMEANS ####################################################
-def kmeans_tuning(X, max_cluster, labels_true, seed):
-    '''The function takes as input the dataset X,
-    the maximum number of clusters we are willing to have,
-    the true labelling of the data, the random seed.
-    It computes the clusters applying the kmeans algorithm on the dataset using
-    the given seed, from 2 to max_cluster. It outputs quality of indeces
-    of the clustering: precision, recall, f1-score, rand index, adjusted
-    rand index, silhouette'''
-    kmeans_eval= np.zeros((max_cluster - 1, 6))
-    i= 0
-    for k in range(2, max_cluster + 1):
-        print(k)
-        kmeans= KMeans(k, random_state= seed).fit(X)
-        labels_pred= kmeans.labels_
-        current_eval= evaluate_cluster(X, labels_true, labels_pred)
-        #print(current_eval)
-        kmeans_eval[i,:]= current_eval
-        i += 1
-        #print(i/max_cluster)
-    return kmeans_eval
 
-def kmeans_plot(kmeans_eval):
-    index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
-    x_axis= range(2, max_cluster + 1)
-    fig= plt.figure(figsize=(20,20))
-    for i in range(0,6):
-        plt.subplot(3, 2, i+1)
-        plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
-        plt.title('K-Means ' + index_name[i])
-        plt.plot(x_axis, kmeans_eval[:,i])
-        plt.ylabel(index_name[i])
-        plt.xlabel('Number of clusters')
-    plt.show()
-    fig.savefig('kmeans_indeces.pdf')
-    plt.close()
-    
-max_cluster= 150
-kmeans_eval= kmeans_tuning(X, max_cluster, fault, 205)
-kmeans_plot(kmeans_eval)
+
 
 #Best cluster according to the Silhouette score
-best_k= kmeans_eval[:,5].argmax() + 2
+best_k= 25
 best_kmeans= KMeans(25, random_state= 205).fit(X)
-plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
+print(true_positive(fault, best_kmeans.labels_))
+#plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
 best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
 print('\nMaximising Silhouette')
 print('Number of clusters: %d' % best_k)
@@ -273,18 +257,7 @@ print("F1: %0.3f" % best_kmean_eval[2])
 print("Rand Index: %0.3f" % best_kmean_eval[3])
 print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
 print("Silhouette: %0.3f" % best_kmean_eval[5])
-
-
-index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
-for i in range(0, 6):
-    best_k= kmeans_eval[:,i].argmax() + 2
-    best_kmeans= KMeans(best_k, random_state= 205).fit(X)
-    best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
-    print('\nMaximising ' + index_name[i])
-    print('Number of clusters: %d' % best_k)
-    print("Precision: %0.3f" % best_kmean_eval[0])
-    print("Recall: %0.3f" % best_kmean_eval[1])
-    print("F1: %0.3f" % best_kmean_eval[2])
-    print("Rand Index: %0.3f" % best_kmean_eval[3])
-    print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
-    print("Silhouette: %0.3f" % best_kmean_eval[5])
+A= contingency_matrix(fault, best_kmeans.labels_)
+B= contingency(fault, best_kmeans.labels_)
+print(A)
+print(B)

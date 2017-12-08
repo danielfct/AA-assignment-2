@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  8 DEC 2017 18:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  8 DEC 2017 19:25
 entering extended mode
 **./report.tex
 (report.tex
@@ -958,37 +958,53 @@ Underfull \hbox (badness 10000) in paragraph at lines 258--260
 
  []
 
-[6] <kmeans_indeces.pdf, id=119, 1445.4pt x 1445.4pt>
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 343--352
+
+ []
+
+[7]
+Overfull \hbox (71.9024pt too wide) in paragraph at lines 355--365
+ [][] 
+ []
+
+<kmeans_indeces.pdf, id=139, 1445.4pt x 1445.4pt>
 File: kmeans_indeces.pdf Graphic file (type pdf)
  <use kmeans_indeces.pdf>
-Package pdftex.def Info: kmeans_indeces.pdf used on input line 346.
+Package pdftex.def Info: kmeans_indeces.pdf used on input line 371.
 (pdftex.def)             Requested size: 426.79135pt x 426.7863pt.
 
-[7] [8 <./kmeans_indeces.pdf>] [9]
-Overfull \hbox (1.6505pt too wide) in paragraph at lines 433--436
+<kmeans_world.png, id=140, 603.25375pt x 307.1475pt>
+File: kmeans_world.png Graphic file (type png)
+ <use kmeans_world.png>
+Package pdftex.def Info: kmeans_world.png used on input line 376.
+(pdftex.def)             Requested size: 426.79135pt x 217.29825pt.
+
+[8] [9 <./kmeans_indeces.pdf>] [10 <./kmeans_world.png>] [11]
+Overfull \hbox (1.6505pt too wide) in paragraph at lines 462--465
 \T1/lmr/m/n/10 To find a max-imum like-li-hood solu-tion for our prob-lem, we s
 hall rely on an \T1/lmr/m/it/10 expectation-maximisation
  []
 
-[10] (report.bbl [11])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 478.
- [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 478.
+(report.bbl [12])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 507.
+ [13]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 507.
  (report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 478.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 478.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 507.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 507.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 752EFDE15D0ACA876E66BCA2E1FC6581;780.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 478.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 507.
  ) 
 Here is how much of TeX's memory you used:
- 10072 strings out of 493323
- 143723 string characters out of 3139062
- 277101 words of memory out of 3000000
- 13361 multiletter control sequences out of 15000+200000
+ 10083 strings out of 493323
+ 143880 string characters out of 3139062
+ 281382 words of memory out of 3000000
+ 13367 multiletter control sequences out of 15000+200000
  89742 words of font info for 75 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,35p,1093b,444s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,10n,35p,1093b,405s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/M
 iKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files/MiKTeX 2.9/fonts/e
 nc/dvips/lm/lm-ec.enc}{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy
@@ -1012,9 +1028,9 @@ type1/public/lm/lmro10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/l
 msy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy5.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2
 .9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (12 pages, 471263 bytes).
+Output written on report.pdf (13 pages, 667604 bytes).
 PDF statistics:
- 313 PDF objects out of 1000 (max. 8388607)
- 48 named destinations out of 1000 (max. 500000)
- 94 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 326 PDF objects out of 1000 (max. 8388607)
+ 51 named destinations out of 1000 (max. 500000)
+ 99 words of extra memory for PDF output out of 10000 (max. 10000000)
 
