@@ -148,6 +148,7 @@ def contingency_matrix(labels_true, labels_pred):
 def positive_negative(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
     contingency_table= contingency_matrix(labels_true, labels_pred)
+    print(contingency_table)
         #checking dimensions match
     n= contingency_table.sum()
     if (labels_true.shape[0] != n):
@@ -155,9 +156,9 @@ def positive_negative(labels_true, labels_pred):
     #computing the quantities that will be required to find the values
     squared_table_sum= np.square(contingency_table).sum()
     #print(type(squared_table_sum)) #check if it is np.int64
-    squared_partition_sum= np.square(contingency_table.sum(axis= 0)).sum()
+    squared_partition_sum= np.square(contingency_table.sum(axis= 1)).sum()
     #print(type(squared_partition_sum)) #check if it is np.int64
-    squared_cluster_sum= np.square(contingency_table.sum(axis= 1)).sum()
+    squared_cluster_sum= np.square(contingency_table.sum(axis= 0)).sum()
     #print(type(squared_cluster_sum)) #check if it is np.int64
     squared_n= np.square(n)
     #print(type(squared_n)) #check if it is np.int64
@@ -192,7 +193,7 @@ def f1_score(tp, fn, fp):
     return 2 *(prec * rec) / (prec + rec)
 
 def rand_index(tp, fn, fp, tn):
-    return (tp + tn) / (tp + fn + fp + tn)
+    return (tp + tn) / (tp + tn + fp + tn)
 
 def adj_rand_index(labels_true, labels_pred):
     return metrics.adjusted_rand_score(labels_true, labels_pred)
@@ -203,7 +204,6 @@ def silhouette(X, labels_pred):
 def evaluate_cluster(X, labels_true, labels_pred):
     tp, fn, fp, tn= positive_negative(labels_true, labels_pred)
     return np.array([precision(tp, fp), recall(tp, fn), f1_score(tp, fn, fp), rand_index(tp, fn, fp, tn), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
-
 
 ################### KMEANS ####################################################
 def kmeans_tuning(X, max_cluster, labels_true, seed):
