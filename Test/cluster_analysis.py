@@ -54,8 +54,8 @@ def positive_negative(labels_true, labels_pred):
     contingency_table= contingency_matrix(labels_true, labels_pred)
         #checking dimensions match
     n= contingency_table.sum()
-    #if (labels_true.shape[0] != n):
-    #    raise ValueError("Labels and Contingency Table dimension do NOT match!")
+    if (labels_true.shape[0] != n):
+        raise ValueError("Labels and Contingency Table dimension do NOT match!")
     #computing the quantities that will be required to find the values
     squared_table_sum= np.square(contingency_table).sum()
     #print(type(squared_table_sum)) #check if it is np.int64
