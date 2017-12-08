@@ -6,6 +6,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
+\usepackage{graphicx}
 
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
@@ -339,7 +340,14 @@
 	\end{enumerate}
 	
 	\subsubsection{Choosing the number of clusters}
-	In order to choice the number of clusters that seemed to yield the best results, we decided to run the algorithm for different values of $k$ 
+	In order to choice the number of clusters that seemed to yield the best results, we decided to run the algorithm for different values of $k$, from $1$ to $100$. The results are shown in Figure \ref{fig:kmeans}.
+	
+	\begin{figure}
+		\includegraphics[width=\linewidth]{kmeans_indeces.pdf}
+		\caption{Precision, Recall, F1-Score, Rand Index, Adjusted Rand Index and Silhouette Score for the K-Means algorithms at different values of k.}
+		\label{fig:kmeans}
+	\end{figure}
+	
 	
 	\subsection{DBSCAN}
 	In our analysis of the DBSCAN algorithm, we shall be relying mainly on \cite{Ester96adensity-based} and \cite{zaki2014dataminingbook}. The necessity of an algorithm adopting a different philosophy with respect to that of the K-Means algorithm arises from the fact that representative methods (such as the latter or, for instance, EM methods) are suitable for finding, at best, convex clusters.

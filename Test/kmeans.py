@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Dec  8 16:27:06 2017
+
+@author: Andrea
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -85,7 +92,7 @@ def preprocess_data(x, y, z):
 
 latitude, longitude, fault = read_csv();
 x, y, z = transform_coordinates(latitude, longitude);
-plot_cartesian_coordinates(x, y, z);
+#plot_cartesian_coordinates(x, y, z);
 X= preprocess_data(x,y,z)
 
 
@@ -219,137 +226,26 @@ def kmeans_tuning(X, max_cluster, labels_true, seed):
         #print(current_eval)
         kmeans_eval[i,:]= current_eval
         i += 1
-        print(i/max_cluster)
+        #print(i/max_cluster)
     return kmeans_eval
 
-max_cluster= 100
-kmeans_eval= kmeans_tuning(X, max_cluster, fault, 205)
-
-ax = plt.figure().add_subplot(111)
-plt.plot(range(2, max_cluster + 1), kmeans_eval[:, 5], label= "Silhouette K-Means")
-plt.xlabel("Number of clusters")
-plt.ylabel("Silhouette")
-plt.title("Silhouette K-Means")
-plt.legend()
-plt.show()
-plt.close()
-
-index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
-for i in range(0, 6):
-    best_k= kmeans_eval[:,i].argmax() + 2
-    best_kmeans= KMeans(best_k, random_state= 205).fit(X)
-    plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
-    best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
-    print('\nMaximising ' + index_name[i])
-    print('Number of clusters: %d' % best_k)
-    print("Precision: %0.3f" % best_kmean_eval[0])
-    print("Recall: %0.3f" % best_kmean_eval[1])
-    print("F1: %0.3f" % best_kmean_eval[2])
-    print("Rand Index: %0.3f" % best_kmean_eval[3])
-    print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
-    print("Silhouette: %0.3f" % best_kmean_eval[5])
+def kmeans_plot(kmeans_eval):
+    index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
+    x_axis= range(2, max_cluster + 1)
+    fig= plt.figure(figsize=(20,20))
+    for i in range(0,6):
+        plt.subplot(3, 2, i+1)
+        plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+        plt.title('K-Means ' + index_name[i])
+        plt.plot(x_axis, kmeans_eval[:,i])
+        plt.ylabel(index_name[i])
+        plt.xlabel('Number of clusters')
+    plt.show()
+    fig.savefig('kmeans_indeces.pdf')
+    plt.close()
     
-###################### DBSCAN #################################################
-#First of all, I have to set the eps parameter of the classifier. To do so,
-#I create a fictitious output vector, filled with ones and then applied the
-#kNN classifier.
-aux_label= np.zeros(fault.shape[0])
-neigh= sklearn.neighbors.KNeighborsClassifier(n_neighbors= 4)
-neigh.fit(X, aux_label)
-
-distances= neigh.kneighbors()
-k_dist= np.zeros(fault.shape[0])
-for i in range(0, fault.shape[0]):
-    k_dist[i]= distances[0][i,3]
-
-print(k_dist)
-k_dist.sort()
-k_dist= k_dist[::-1]
-print(k_dist)
-
-ax_2 = plt.figure().add_subplot(111)
-plt.plot(range(0, fault.shape[0]), k_dist, label= "4-th distance")
-plt.xlabel("Points")
-plt.ylabel("Distance")
-plt.title("4-th Distance")
-plt.legend()
-plt.show()
-plt.close()
-
-#We set epsilon to the distance we have at point 300
-eps= k_dist[500]
-dbscan= sklearn.cluster.DBSCAN(eps, 4, n_jobs=-1)
-dbscan.fit(X)
-
-pred_labels = dbscan.labels_
-
-# Number of clusters in labels, ignoring noise if present.
-n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
-print('Number of clusters: %d' % n_clusters_)
-print("Precision: %0.3f" % precision(fault, pred_labels))
-print("Recall: %0.3f" % recall(fault, pred_labels))
-print("F1: %0.3f" % f1_score(fault, pred_labels))
-print("Rand Index: %0.3f" % rand_index(fault, pred_labels))
-print("Adjusted Rand Index: %0.3f" % adj_rand_index(fault, pred_labels))
-print("Silhouette: %0.3f" % silhouette(X, pred_labels))
-plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
+max_cluster= 150
+kmeans_eval= kmeans_tuning(X, max_cluster, fault, 205)
+kmeans_plot(kmeans_eval)
 
 
-############### GAUSSIAN MIXTURE ##############################################
-lowest_bic = np.infty
-bic = []
-max_range= 100
-n_components_range = range(1, max_range + 1)
-cv_types = ['spherical', 'tied', 'diag', 'full']
-for cv_type in cv_types:
-    print('\n'+cv_type)
-    iter= 0
-    for n_components in n_components_range:
-        print(iter/max_range)
-        iter+= 1
-        # Fit a Gaussian mixture with EM
-        gmm = mixture.GaussianMixture(n_components=n_components,
-                                      covariance_type=cv_type)
-        gmm.fit(X)
-        bic.append(gmm.bic(X))
-        if bic[-1] < lowest_bic:
-            lowest_bic = bic[-1]
-            best_gmm = gmm
-
-bic = np.array(bic)
-color_iter = itertools.cycle(['navy', 'turquoise', 'cornflowerblue',
-                              'darkorange'])
-clf = best_gmm
-bars = []
-
-# Plot the BIC scores
-spl = plt.subplot(2, 1, 1)
-for i, (cv_type, color) in enumerate(zip(cv_types, color_iter)):
-    xpos = np.array(n_components_range) + .2 * (i - 2)
-    bars.append(plt.bar(xpos, bic[i * len(n_components_range):
-                                  (i + 1) * len(n_components_range)],
-                        width=.2, color=color))
-plt.xticks(n_components_range)
-plt.ylim([bic.min() * 1.01 - .01 * bic.max(), bic.max()])
-plt.title('BIC score per model')
-xpos = np.mod(bic.argmin(), len(n_components_range)) + .65 +\
-    .2 * np.floor(bic.argmin() / len(n_components_range))
-plt.text(xpos, bic.min() * 0.97 + .03 * bic.max(), '*', fontsize=14)
-spl.set_xlabel('Number of components')
-spl.legend([b[0] for b in bars], cv_types)
-
-
-##BEST GMM
-clf.fit(X)
-pred_labels = clf.predict(X)
-
-# Number of clusters in labels, ignoring noise if present.
-n_clusters_= clf.n_components
-print('Number of clusters: %d' % n_clusters_)
-print("Precision: %0.3f" % precision(fault, pred_labels))
-print("Recall: %0.3f" % recall(fault, pred_labels))
-print("F1: %0.3f" % f1_score(fault, pred_labels))
-print("Rand Index: %0.3f" % rand_index(fault, pred_labels))
-print("Adjusted Rand Index: %0.3f" % adj_rand_index(fault, pred_labels))
-print("Silhouette: %0.3f" % silhouette(X, pred_labels))
-plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
