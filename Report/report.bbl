@@ -1,4 +1,5 @@
-\begin{thebibliography}{EKSX96}
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{vdWCV11}
 
 \bibitem[Bis06]{Bishop:2006}
 Christopher~M. Bishop.
@@ -9,13 +10,19 @@ Christopher~M. Bishop.
 Martin Ester, Hans-Peter Kriegel, Jörg Sander, and Xiaowei Xu.
 \newblock A density-based algorithm for discovering clusters in large spatial
   databases with noise.
-\newblock pages 226--231. AAAI Press, 1996.
+\newblock In {\em Data Mining and Knowledge Discovery}, pages 226--231. AAAI
+  Press, 1996.
 
 \bibitem[HTF01]{hastie01statisticallearning}
 Trevor Hastie, Robert Tibshirani, and Jerome Friedman.
 \newblock {\em The Elements of Statistical Learning}.
 \newblock Springer Series in Statistics. Springer New York Inc., New York, NY,
   USA, 2001.
+
+\bibitem[Hun07]{Hunter_2007}
+John~D. Hunter.
+\newblock Matplotlib: A 2d graphics environment.
+\newblock {\em Computing in Science {\&} Engineering}, 9(3):90--95, 2007.
 
 \bibitem[JW07]{MR2372475}
 Richard~A. Johnson and Dean~W. Wichern.
@@ -26,6 +33,18 @@ Richard~A. Johnson and Dean~W. Wichern.
 Jure Leskovec, Anand Rajaraman, and Jeffrey~David Ullman.
 \newblock {\em Mining of Massive Datasets}.
 \newblock Cambridge University Pr., 2014.
+
+\bibitem[PVG{\etalchar{+}}11]{scikit-learn}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
+  M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos,
+  D.~Cournapeau, M.~Brucher, M.~Perrot, and E.~Duchesnay.
+\newblock Scikit-learn: Machine learning in {P}ython.
+\newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
+
+\bibitem[vdWCV11]{doi:10.1109/MCSE.2011.37}
+Stéfan van~der Walt, S.~Chris Colbert, and Gaël Varoquaux.
+\newblock The numpy array: A structure for efficient numerical computation.
+\newblock {\em Computing in Science \& Engineering}, 13(2):22--30, 2011.
 
 \bibitem[ZWM14]{zaki2014dataminingbook}
 Mohammed~J. Zaki and Jr. Wagner~Meira.

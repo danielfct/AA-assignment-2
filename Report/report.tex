@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
@@ -103,21 +104,21 @@
 	Further, we let $n_{i} = \left| C_{i} \right|$ and $m_{j} = \left| T_{j} \right|$.
 	Let then $\boldsymbol{x_{i}}, \boldsymbol{x_{j}} \in \mathcal{D}$ be any two points such that $i \neq j$. If both $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong to the same cluster, or, equivalently, if $\hat{y}_{i} = \hat{y}_{j}$, we call it a \textit{positive} event and if they do not belong to the same cluster, that is if $\hat{y}_{i} \neq \hat{y}_{j}$, we call that a \textit{negative} event. Depending on whether there is agreement between the cluster labels and the partition labels, we thus have four possibilities to consider.
 	\begin{itemize}
-		\item[True Positives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong both to the same partition in $\mathcal{T}$ and to the same cluster in $\mathcal{C}$. We have a true positive pair because the positive event correspond to the ground truth.
+		\item[True Positives] $\boldsymbol{x}_{i}$ and $\boldsymbol{x}_{j}$ belong both to the same partition in $\mathcal{T}$ and to the same cluster in $\mathcal{C}$. We have a true positive pair because the positive event correspond to the ground truth.
 		\begin{equation*}
-		TP = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} = y_{j}, \hat{y}_{i} = \hat{y}_{j} \right\}\right|
+		TP = \left|\left\{\left(\boldsymbol{x}_{i}, \boldsymbol{x}_{j}\right) : y_{i} = y_{j}, \hat{y}_{i} = \hat{y}_{j} \right\}\right|
 		\end{equation*}
-		\item[False Negatives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ belong to the same partition in $\mathcal{T}$ but to different clusters in $\mathcal{C}$. Thus, the negative event does not correspond to the truth.
+		\item[False Negatives] $\boldsymbol{x}_{i}$ and $\boldsymbol{x}_{j}$ belong to the same partition in $\mathcal{T}$ but to different clusters in $\mathcal{C}$. Thus, the negative event does not correspond to the truth.
 		\begin{equation*}
-		FN = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} = y_{j}, \hat{y}_{i} \neq \hat{y}_{j} \right\}\right|
+		FN = \left|\left\{\left(\boldsymbol{x}_{i}, \boldsymbol{x}_{j}\right) : y_{i} = y_{j}, \hat{y}_{i} \neq \hat{y}_{j} \right\}\right|
 		\end{equation*}
-		\item[False Positives] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ do not belong to the same partition in $\mathcal{T}$ but they do belong to the same cluster in $\mathcal{C}$. The positive event is therefore false.
+		\item[False Positives] $\boldsymbol{x}_{i}$ and $\boldsymbol{x}_{j}$ do not belong to the same partition in $\mathcal{T}$ but they do belong to the same cluster in $\mathcal{C}$. The positive event is therefore false.
 		\begin{equation*}
-		FP = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} \neq y_{j}, \hat{y}_{i} = \hat{y}_{j} \right\}\right|
+		FP = \left|\left\{\left(\boldsymbol{x}_{i}, \boldsymbol{x}_{j}\right) : y_{i} \neq y_{j}, \hat{y}_{i} = \hat{y}_{j} \right\}\right|
 		\end{equation*}
-		\item[True Negative] $\boldsymbol{x_{i}}$ and $\boldsymbol{x_{j}}$ neither belong to the same partition in $\mathcal{T}$ nor to the same cluster in $\mathcal{C}$. The false event is therefore true.
+		\item[True Negative] $\boldsymbol{x}_{i}$ and $\boldsymbol{x}_{j}$ neither belong to the same partition in $\mathcal{T}$ nor to the same cluster in $\mathcal{C}$. The false event is therefore true.
 		\begin{equation*}
-		TN = \left|\left\{\left(\boldsymbol{x_{i}}, \boldsymbol{x_{j}}\right) : y_{i} \neq y_{j}, \hat{y}_{i} \neq \hat{y}_{j} \right\}\right|
+		TN = \left|\left\{\left(\boldsymbol{x}_{i}, \boldsymbol{x}_{j}\right) : y_{i} \neq y_{j}, \hat{y}_{i} \neq \hat{y}_{j} \right\}\right|
 		\end{equation*}
 		\end{itemize}
 		The total pair of points is given by $N = \frac{n\left(n-1\right)}{2}$ and we have the following identity:
@@ -192,6 +193,21 @@
 		and, as it is natural, a value close to $+1$ indicates a good clustering.
 	\end{description}
 	\subsection{The USGS Catalog}
+	The dataset on which we shall develop our analysis was obtained from the \href{https://earthquake.usgs.gov/earthquakes/search/}{USGS catalog}. It comprises all the geographical coordinates of every seismic event of a magnitude of at least 6.5 occurred during the past century. A column, specifying the fault line between the tectonic plates that are closest to the seismic event was also considered. It was obtained from the same source and it will serve the role of providing a ground-truth partitioning for external validation. Each fault line is identified by an non-negative integer, with the exception of those earthquakes that were not significantly close to any fault line: they are labelled as $-1$.
+	Before proceeding with the analysis, we transformed the longitude and latitude values into Earth-centred, Earth-fixed coordinates $\left(x,y,z\right)$ as follows:
+	\begin{equation*}
+	x = R \, \cos\left(latitude \cdot \frac{\pi}{180}\right) \cos\left(longitude \cdot \frac{\pi}{180} \right)
+	\end{equation*}
+	\begin{equation*}
+	y = R \, \cos\left(latitude \cdot \frac{\pi}{180}\right) \sin\left(longitude \cdot \frac{\pi}{180} \right)
+	\end{equation*}
+	\begin{equation*}
+	z = R \, \sin\left(latitude \cdot \frac{\pi}{180}\right),
+	\end{equation*}
+	where $R = 6731 \, \mathrm{Km}$, being the average radius of the Earth. This was done as necessary to compute distances between two points.
+	Apart from that, no other transformation was added to the data: we did not scale them, as all the axes are measured according to the same unit (namely kilometres).
+	
+	The analysis was conducted using the \href{https://www.python.org/}{Python} programming language. In particular, the \href{http://scikit-learn.org/stable/}{Scikit-Learn} package (\cite{scikit-learn}), the \href{http://www.numpy.org/}{NumPy} package (\cite{doi:10.1109/MCSE.2011.37}) and the \href{https://matplotlib.org/}{Matplotlib} package (\cite{Hunter_2007}) were used.
 	\section{Clustering Algorithms}
 	\subsection{K-Means Algorithm}
 	In our exposition of the K-Means Algorithm we rely heavily on \cite{hastie01statisticallearning}, \cite{MR2372475} and \cite{zaki2014dataminingbook}.
@@ -450,5 +466,5 @@
  	This algorithm tends to require many more iterations compared to the K-Means algorithm to converge, also requiring more computations at every cycle. It is therefore common to run the K-Means algorithm first in order to find a suitable initialisation for a Gaussian mixture model.
  	The means are the centroids of the clusters, the covariances are set as the covariances of the clusters and the mixing coefficients are set to be the proportions of points belonging to the cluster.
 	\bibliographystyle{alpha}
-	\bibliography{bibliography}	
+	\bibliography{bibliography_biblatex}	
 \end{document}
