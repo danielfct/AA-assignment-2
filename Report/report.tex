@@ -143,7 +143,33 @@
 		TN = N - \left( TP + FN + FP \right) = \frac{1}{2} \left( n^{2} - \sum_{i=1}^{r} n_{i}^{2} - \sum_{j=1}^{k} m_{j}^{2} + \sum_{i=1}^{r} \sum_{j=1}^{k} n_{ij}^{2} \right).
 		\end{equation*}
 		In this way, we can compute the values in $O\left(rk\right)$ time. As the contingency table can be obtained in linear time, the total time is $O\left(n + rk\right)$.
-	
+		Having said that, we can proceed to define the external indices we shall be using throughout our analysis.
+		\begin{description}
+			\item[Precision] Precision, in the context of information retrieval, is defined as the fraction of retrieved documents that are relevant. We define it by analogy here as 
+			\begin{equation*}
+			\frac{TP}{TP + FP},
+			\end{equation*}
+			obtaining an index that gives us a measure of the fraction of the positive events that are true. Note that the index will always be contained in $\left[0,1\right]$.
+			\item[Recall] Recall, in the context of information retrieval, is defined as the fraction of relevant documents that are actually retrieved. As done before, we define it by analogy
+			\begin{equation*}
+			\frac{TP}{TP + FN}.
+			\end{equation*}
+			Here we measure how many positive events the algorithm has scored amongst true events. Note that the index will always be contained in $\left[0,1\right]$.
+			\item[F1-Score] The F1-Score is defined to be the harmonic mean between precision and recall:
+			\begin{equation*}
+			2\frac{precision \cdot recall}{precision + recall}
+			\end{equation*}
+			When both recall and precision are perfect, the value is $1$ and is bounded below by $0$.
+			\item[Rand Statistics] The Rand statistics measures the fraction of true positive and true negatives over all point pairs. It is defined as
+			\begin{equation*}
+			Rand = \frac{TP+ TN}{N}.
+			\end{equation*}
+			The Rand statistics measures the fraction of point pairs where both $\mathcal{C}$ and $\mathcal{T}$ agree. A perfect clustering has a value of 1 for the statistics.
+			\item[Adjusted Rand Index] The adjusted Rand index builds on the Rand index, correcting it for chance. It can yield negative values and it is defined as
+			\begin{equation*}
+			Adjusted Rand Index = \frac{\sum_{i=1}^{r} \sum_{j=1}^{k} {n_{ij}\choose{2}} - \frac{\sum_{i=1}^{r}{n_{i}\choose{2}}  \sum_{j=1}^{k}{m_{j}\choose{2}}}{{{n}\choose{2}}}}{\frac{1}{2}\left[\sum_{i=1}^{r} {{n_{i}}\choose{2}} + \sum_{j=1}^{k} {{m_{j}}\choose{2}} \right] - \frac{\left[\sum_{i=1}^{r} {{n_{i}}\choose{2}}  \sum_{j=1}^{k} {{m_{j}}\choose{2}} \right]}{{{n}\choose{2}}}}
+			\end{equation*}
+		\end{description}
 	\subsection{The USGS Catalog}
 	\section{Clustering Algorithms}
 	\subsection{K-Means Algorithm}
