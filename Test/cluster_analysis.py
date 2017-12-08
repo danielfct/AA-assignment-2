@@ -52,6 +52,7 @@ def contingency_matrix(labels_true, labels_pred):
 def positive_negative(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
     contingency_table= contingency_matrix(labels_true, labels_pred)
+    print(contingency_table)
         #checking dimensions match
     n= contingency_table.sum()
     if (labels_true.shape[0] != n):
@@ -59,9 +60,9 @@ def positive_negative(labels_true, labels_pred):
     #computing the quantities that will be required to find the values
     squared_table_sum= np.square(contingency_table).sum()
     #print(type(squared_table_sum)) #check if it is np.int64
-    squared_partition_sum= np.square(contingency_table.sum(axis= 0)).sum()
+    squared_partition_sum= np.square(contingency_table.sum(axis= 1)).sum()
     #print(type(squared_partition_sum)) #check if it is np.int64
-    squared_cluster_sum= np.square(contingency_table.sum(axis= 1)).sum()
+    squared_cluster_sum= np.square(contingency_table.sum(axis= 0)).sum()
     #print(type(squared_cluster_sum)) #check if it is np.int64
     squared_n= np.square(n)
     #print(type(squared_n)) #check if it is np.int64
