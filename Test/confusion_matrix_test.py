@@ -78,28 +78,28 @@ def positive_negative(labels_true, labels_pred):
     #    raise ValueError("Labels and Contingency Table dimension do NOT match!")
     #computing the quantities that will be required to find the values
     squared_table_sum= np.square(contingency_table).sum()
-    print(type(squared_table_sum)) #check if it is np.int64
+    #print(type(squared_table_sum)) #check if it is np.int64
     squared_partition_sum= np.square(contingency_table.sum(axis= 0)).sum()
-    print(type(squared_partition_sum)) #check if it is np.int64
+    #print(type(squared_partition_sum)) #check if it is np.int64
     squared_cluster_sum= np.square(contingency_table.sum(axis= 1)).sum()
-    print(type(squared_cluster_sum)) #check if it is np.int64
+    #print(type(squared_cluster_sum)) #check if it is np.int64
     squared_n= np.square(n)
-    print(type(squared_n)) #check if it is np.int64
+    #print(type(squared_n)) #check if it is np.int64
     
     tp= 0.5 * (squared_table_sum - n)
-    print(type(tp))
-    print(tp)
+    #print(type(tp))
+    #print(tp)
     fn= 0.5 * (squared_partition_sum - squared_table_sum)
-    print(type(fn))
-    print(fn)
+    #print(type(fn))
+    #print(fn)
     fp= 0.5 * (squared_cluster_sum - squared_table_sum)
-    print(type(fp))
-    print(fp)
+    #print(type(fp))
+    #print(fp)
     tn= 0.5 * (squared_n - squared_cluster_sum - squared_partition_sum + squared_table_sum)
-    print(type(fn))
-    print(fn)
+    #print(type(fn))
+    #print(fn)
     
-    print('n is ' + str(n))
+    #print('n is ' + str(n))
     if (tp+fn+fp+tn) != (n * (n - 1) / 2):
         raise ValueError('Something is wrong with tp, fn, fp, fn')
     return tp, fn, fp, fn
@@ -142,6 +142,25 @@ def precision(tp, fp):
     
 def recall(tp, fn):
     return tp/(tp+fn)
+
+def f1_score(tp, fn, fp):
+    prec= precision(tp, fp)
+    rec= recall(tp, fn)
+    return 2 *(prec * rec) / (prec + rec)
+
+def rand_index(tp, fn, fp, tn):
+    return (tp + tn) / (tp + tn + fp + fn)
+
+def adj_rand_index(labels_true, labels_pred):
+    return metrics.adjusted_rand_score(labels_true, labels_pred)
+
+def silhouette(X, labels_pred):
+    return metrics.silhouette_score(X, labels_pred)
+
+def evaluate_cluster(X, labels_true, labels_pred):
+    tp, fn, fp, fn= positive_negative(labels_true, labels_pred)
+    return np.array([precision(tp, fp), recall(tp, fn), f1_score(tp, fn, fp), rand_index(tp, fn, fp, tn), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
+
 
 labels_true= np.array([1, 3, 2, 1])
 labels_pred= np.array([0, 1, 0, 1])
