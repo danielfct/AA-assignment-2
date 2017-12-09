@@ -6,7 +6,6 @@ def check_clusterings(labels_true, labels_pred):
     """Check that the two clusterings matching 1D integer arrays."""
     labels_true = np.asarray(labels_true)
     labels_pred = np.asarray(labels_pred)
-
     # input checks
     if labels_true.ndim != 1:
         raise ValueError(
@@ -34,7 +33,6 @@ def contingency_matrix(labels_true, labels_pred):
         Matrix :math:`C` such that :math:`C_{i, j}` is the number of samples in
         true class :math:`i` and in predicted class :math:`j`.
     """
-
     classes, class_idx = np.unique(labels_true, return_inverse=True)
     clusters, cluster_idx = np.unique(labels_pred, return_inverse=True)
     n_classes = classes.shape[0]
@@ -52,35 +50,21 @@ def contingency_matrix(labels_true, labels_pred):
 def positive_negative(labels_true, labels_pred):
     labels_true, labels_pred= check_clusterings(labels_true, labels_pred)
     contingency_table= contingency_matrix(labels_true, labels_pred)
-    #print(contingency_table)
-        #checking dimensions match
+    #checking dimensions match
     n= contingency_table.sum()
     if (labels_true.shape[0] != n):
         raise ValueError("Labels and Contingency Table dimension do NOT match!")
     #computing the quantities that will be required to find the values
     squared_table_sum= np.square(contingency_table).sum()
-    #print(type(squared_table_sum)) #check if it is np.int64
     squared_partition_sum= np.square(contingency_table.sum(axis= 1)).sum()
-    #print(type(squared_partition_sum)) #check if it is np.int64
     squared_cluster_sum= np.square(contingency_table.sum(axis= 0)).sum()
-    #print(type(squared_cluster_sum)) #check if it is np.int64
     squared_n= np.square(n)
-    #print(type(squared_n)) #check if it is np.int64
     
     tp= 0.5 * (squared_table_sum - n)
-    #print(type(tp))
-    #print(tp)
     fn= 0.5 * (squared_partition_sum - squared_table_sum)
-    #print(type(fn))
-    #print(fn)
     fp= 0.5 * (squared_cluster_sum - squared_table_sum)
-    #print(type(fp))
-    #print(fp)
     tn= 0.5 * (squared_n - squared_cluster_sum - squared_partition_sum + squared_table_sum)
-    #print(type(fn))
-    #print(fn)
-    
-    #print('n is ' + str(n))
+
     if (tp+fn+fp+tn) != (n * (n - 1) / 2):
         raise ValueError('Something is wrong with tp, fn, fp, fn')
     return tp, fn, fp, tn

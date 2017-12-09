@@ -20,17 +20,15 @@ def kmeans_tuning(X, max_cluster, labels_true, seed):
         kmeans_model.fit(X)
         labels_pred= kmeans_model.labels_
         current_eval= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
-        #print(current_eval)
         kmeans_eval[i,:]= current_eval
         i += 1
-        #print(i/max_cluster)
     return kmeans_eval
 
 def plot_cluster(max_cluster, kmeans_eval):
     index_name= ['Precision', 'Recall', 'F1Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
     x_axis= range(2, max_cluster + 1)
     fig= plt.figure(figsize=(20,20))
-    for i in range(0,6):
+    for i in range(0, 6):
         plt.subplot(3, 2, i+1)
         plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
         plt.title('KMeans ' + index_name[i])

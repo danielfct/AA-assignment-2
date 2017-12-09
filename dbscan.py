@@ -29,9 +29,8 @@ def plot_k_distance(k_dist, k=4):
     plt.title(str(k) + "-th Distance")
     plt.legend()
     plt.show()
-    fig.savefig('k_dist_dbscan.pdf')
+    fig.savefig('k_dist_dbscan')
     plt.close()
-
 
 def dbscan_tuning(X, labels_true, min_eps, max_eps, pace):
     """This function computes the DBSCAN algorithm for the values comprised
@@ -50,12 +49,10 @@ def dbscan_tuning(X, labels_true, min_eps, max_eps, pace):
         pred_labels = dbscan_model.labels_
         n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
         n_clusters[i]= n_clusters_
-        #print(n_clusters_)
         indices[i]= cluster_analysis.evaluate_cluster(X, labels_true, pred_labels)
         i+= 1
     return indices, n_clusters
         
-
 def plot_indices(indices, min_eps, max_eps, pace):
     index_name = ['Precision', 'Recall', 'F1Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
     x_axis = np.arange(min_eps, max_eps, pace)
@@ -68,7 +65,7 @@ def plot_indices(indices, min_eps, max_eps, pace):
         plt.ylabel(index_name[i])
         plt.xlabel('Value of Epsilon')
     plt.show()
-    fig.savefig('dbscan_indeces.pdf')
+    fig.savefig('dbscan_indeces')
     plt.close()
 
 def plot_cluster(n_clusters, min_eps, max_eps, pace):
@@ -80,5 +77,5 @@ def plot_cluster(n_clusters, min_eps, max_eps, pace):
     plt.ylabel('N. Cluster')
     plt.xlabel('Value of Epsilon')
     plt.show()
-    fig.savefig('dbscan_num_cluster.pdf')
+    fig.savefig('dbscan_num_cluster')
     plt.close()
