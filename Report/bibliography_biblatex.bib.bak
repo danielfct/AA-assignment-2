@@ -128,4 +128,17 @@
   publisher = {Institute of Electrical and Electronics Engineers ({IEEE})},
 }
 
+@Article{Schwarz_1978,
+  author    = {Gideon Schwarz},
+  title     = {Estimating the Dimension of a Model},
+  journal   = {The Annals of Statistics},
+  year      = {1978},
+  volume    = {6},
+  number    = {2},
+  month     = {mar},
+  pages     = {461--464},
+  doi       = {doi:10.1214/aos/1176344136},
+  publisher = {Institute of Mathematical Statistics},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}

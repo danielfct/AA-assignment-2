@@ -437,6 +437,7 @@
 	
 	To plot a world map clustered with the DBSCAN algorithm, we relied on \cite{Ester96adensity-based} for our choice of $\varepsilon$.
 	Firstly, we computed for each point in the dataset its $k$-th distance, defined as the distance between the point in question and the $k$-th closest neighbour. As already specified, $k$ was set to be $4$. Distances were then sorted as shown in Figure (\ref{fig:dbscan_distance}).
+	\cite{Ester96adensity-based} then suggests to pick a value of $\varepsilon$ that is at the elbow of the obtain plot. In this case, we set our value to be 
 	\subsection{Gaussian Mixture}
 	In order to introduce Gaussian Mixture models, we shall be relying mainly on \cite{Bishop:2006}.
 	A Gaussian mixture distribution can be written as a linear superposition of Gaussians in the form
