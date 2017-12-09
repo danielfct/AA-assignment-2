@@ -121,3 +121,4 @@ def dbscan(X, labels_true, eps, delta, pace= 1):
     data.plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
     
 dbscan(X, fault, 300, 300, 1)
+#TODO: compute the indices excluding the noise!
