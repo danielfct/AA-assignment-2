@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  9 DEC 2017 19:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  9 DEC 2017 20:16
 entering extended mode
 **./report.tex
 (report.tex
@@ -948,104 +948,109 @@ Overfull \hbox (30.27956pt too wide) detected at line 132
 lmm/m/it/10 :
  []
 
-[3] [4] [5]
-Underfull \hbox (badness 10000) in paragraph at lines 255--257
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 258--260
+[3] [4] <Faults.png, id=102, 722.7pt x 361.35pt>
+File: Faults.png Graphic file (type png)
+ <use Faults.png>
+Package pdftex.def Info: Faults.png used on input line 198.
+(pdftex.def)             Requested size: 426.79135pt x 213.39867pt.
+ [5 <./Faults.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 261--263
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 343--352
+Underfull \hbox (badness 10000) in paragraph at lines 264--266
 
  []
 
 [7]
-Overfull \hbox (71.9024pt too wide) in paragraph at lines 355--365
+Underfull \hbox (badness 10000) in paragraph at lines 349--358
+
+ []
+
+[8]
+Overfull \hbox (71.9024pt too wide) in paragraph at lines 361--371
  [][] 
  []
 
-<kmeans_indeces.pdf, id=147, 1445.4pt x 1445.4pt>
+<kmeans_indeces.pdf, id=161, 1445.4pt x 1445.4pt>
 File: kmeans_indeces.pdf Graphic file (type pdf)
  <use kmeans_indeces.pdf>
-Package pdftex.def Info: kmeans_indeces.pdf used on input line 371.
+Package pdftex.def Info: kmeans_indeces.pdf used on input line 377.
 (pdftex.def)             Requested size: 426.79135pt x 426.7863pt.
 
-<kmeans_world.png, id=148, 603.25375pt x 320.19624pt>
+<kmeans_world.png, id=162, 603.25375pt x 320.19624pt>
 File: kmeans_world.png Graphic file (type png)
  <use kmeans_world.png>
-Package pdftex.def Info: kmeans_world.png used on input line 376.
+Package pdftex.def Info: kmeans_world.png used on input line 382.
 (pdftex.def)             Requested size: 426.79135pt x 226.52988pt.
 
-[8] [9 <./kmeans_indeces.pdf>] [10 <./kmeans_world.png>]
-<dbscan_indeces.pdf, id=213, 1445.4pt x 1445.4pt>
+[9] [10 <./kmeans_indeces.pdf>]
+<dbscan_indeces.pdf, id=220, 1445.4pt x 1445.4pt>
 File: dbscan_indeces.pdf Graphic file (type pdf)
  <use dbscan_indeces.pdf>
-Package pdftex.def Info: dbscan_indeces.pdf used on input line 419.
+Package pdftex.def Info: dbscan_indeces.pdf used on input line 425.
 (pdftex.def)             Requested size: 426.79135pt x 426.7863pt.
 
-<dbscan_num_cluster.pdf, id=214, 433.62pt x 289.08pt>
+<dbscan_num_cluster.pdf, id=221, 433.62pt x 289.08pt>
 File: dbscan_num_cluster.pdf Graphic file (type pdf)
 
 <use dbscan_num_cluster.pdf>
-Package pdftex.def Info: dbscan_num_cluster.pdf used on input line 424.
+Package pdftex.def Info: dbscan_num_cluster.pdf used on input line 430.
 (pdftex.def)             Requested size: 426.79135pt x 284.54036pt.
- <k_dist_dbscan.pdf, id=215, 433.62pt x 289.08pt>
+ <k_dist_dbscan.pdf, id=222, 433.62pt x 289.08pt>
 File: k_dist_dbscan.pdf Graphic file (type pdf)
 
 <use k_dist_dbscan.pdf>
-Package pdftex.def Info: k_dist_dbscan.pdf used on input line 430.
+Package pdftex.def Info: k_dist_dbscan.pdf used on input line 436.
 (pdftex.def)             Requested size: 426.79135pt x 284.54036pt.
- <DBSCAN.png, id=216, 722.7pt x 361.35pt>
+ <DBSCAN.png, id=223, 722.7pt x 361.35pt>
 File: DBSCAN.png Graphic file (type png)
 
 <use DBSCAN.png>
-Package pdftex.def Info: DBSCAN.png used on input line 436.
+Package pdftex.def Info: DBSCAN.png used on input line 442.
 (pdftex.def)             Requested size: 426.79135pt x 213.39867pt.
- [11 <./dbscan_indeces.pdf>] [12 <./dbscan_num_cluster.pdf> <./k_dist_dbscan.pd
-f
+ [11 <./kmeans_world.png>] [12 <./dbscan_indeces.pdf>] [13 <./dbscan_num_cluste
+r.pdf> <./k_dist_dbscan.pdf
 
 pdfTeX warning: pdflatex.exe (file ./k_dist_dbscan.pdf): PDF inclusion: multipl
 e pdfs with page group included in a single page
->] [13 <./DBSCAN.png>]
-Overfull \hbox (1.6505pt too wide) in paragraph at lines 493--496
+>] [14 <./DBSCAN.png>]
+Overfull \hbox (1.6505pt too wide) in paragraph at lines 499--502
 \T1/lmr/m/n/10 To find a max-imum like-li-hood solu-tion for our prob-lem, we s
 hall rely on an \T1/lmr/m/it/10 expectation-maximisation
  []
 
-[14] <gmm_indeces.pdf, id=370, 1445.4pt x 1445.4pt>
+[15] <gmm_indeces.pdf, id=382, 1445.4pt x 1445.4pt>
 File: gmm_indeces.pdf Graphic file (type pdf)
  <use gmm_indeces.pdf>
-Package pdftex.def Info: gmm_indeces.pdf used on input line 539.
+Package pdftex.def Info: gmm_indeces.pdf used on input line 545.
 (pdftex.def)             Requested size: 426.79135pt x 426.7863pt.
 
-<Gaussian.png, id=371, 722.7pt x 361.35pt>
+<Gaussian.png, id=383, 722.7pt x 361.35pt>
 File: Gaussian.png Graphic file (type png)
  <use Gaussian.png>
-Package pdftex.def Info: Gaussian.png used on input line 544.
+Package pdftex.def Info: Gaussian.png used on input line 550.
 (pdftex.def)             Requested size: 426.79135pt x 213.39867pt.
- [15] [16 <./gmm_indeces.pdf>] (report.bbl [17 <./Gaussian.png>])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 571.
- [18]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 571.
+ [16] [17 <./gmm_indeces.pdf>] (report.bbl [18 <./Gaussian.png>])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 580.
+ [19]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 580.
  (report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 571.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 571.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 580.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 580.
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: B6BA01B911F0A75A4D9D581E4EF4E41F;973.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 571.
+(rerunfilecheck)             Checksum: 3A4817CBF6C91199B75120A4C91C00CA;1020.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 580.
  ) 
 Here is how much of TeX's memory you used:
- 10136 strings out of 493323
- 144754 string characters out of 3139062
- 282312 words of memory out of 3000000
- 13400 multiletter control sequences out of 15000+200000
+ 10146 strings out of 493323
+ 144869 string characters out of 3139062
+ 280432 words of memory out of 3000000
+ 13406 multiletter control sequences out of 15000+200000
  89742 words of font info for 75 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,10n,35p,1093b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,10n,35p,1463b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/M
 iKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files/MiKTeX 2.9/fonts/e
 nc/dvips/lm/lm-ec.enc}{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy
@@ -1069,9 +1074,9 @@ type1/public/lm/lmro10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/l
 msy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy5.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2
 .9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (18 pages, 1164419 bytes).
+Output written on report.pdf (19 pages, 1360009 bytes).
 PDF statistics:
- 540 PDF objects out of 1000 (max. 8388607)
- 65 named destinations out of 1000 (max. 500000)
- 145 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 554 PDF objects out of 1000 (max. 8388607)
+ 68 named destinations out of 1000 (max. 500000)
+ 158 words of extra memory for PDF output out of 10000 (max. 10000000)
 

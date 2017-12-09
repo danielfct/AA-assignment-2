@@ -53,7 +53,7 @@
 	The data set used in this assigment was obtained from the USGS catalog and had the information about all seismic events of magnitude at least 6.5 in the last 100 years.
 	In the end, we discussion of the advantages and disadvantages of each algorithm for this dataset, informed by an analysis of their behaviour with different parameters
 	and the different scores previously referred.
-	TODO brief summary of interpetations and conclusions
+	Although the distributions of the external indices, obtained by implementing the algorithm with different parameters, were somewhat similar across the methods (if considered with respect to their maximum), we have found that DBSCAN was able to cluster the data in a way that would maintain a higher geometrical similarity with respect to the original data than the other algorithms.
 	\end{abstract}
 
 	\section{Introduction}
@@ -194,6 +194,11 @@
 		and, as it is natural, a value close to $+1$ indicates a good clustering.
 	\end{description}
 	\subsection{The USGS Catalog}
+	\begin{figure}
+	\includegraphics[width=\linewidth]{Faults.png}
+	\caption{Representation of seismic events with magnitude of at least 6.5 labelled according to their fault.}
+	\label{fig:fault}
+	\end{figure}
 	The dataset on which we shall develop our analysis was obtained from the \href{https://earthquake.usgs.gov/earthquakes/search/}{USGS catalog}. It comprises all the geographical coordinates of every seismic event of a magnitude of at least 6.5 occurred during the past century. A column, specifying the fault line between the tectonic plates that are closest to the seismic event was also considered. It was obtained from the same source and it will serve the role of providing a ground-truth partitioning for external validation. Each fault line is identified by an non-negative integer, with the exception of those earthquakes that were not significantly close to any fault line: they are labelled as $-1$.
 	Before proceeding with the analysis, we transformed the longitude and latitude values into Earth-centred, Earth-fixed coordinates $\left(x,y,z\right)$ as follows:
 	\begin{equation*}
@@ -207,8 +212,9 @@
 	\end{equation*}
 	where $R = 6731 \, \mathrm{Km}$, being the average radius of the Earth. This was done as necessary to compute distances between two points.
 	Apart from that, no other transformation was added to the data: we did not scale them, as all the axes are measured according to the same unit (namely kilometres).
+	Figure (\ref{fig:fault}) shows the seismic events, labelled according to the $92$ fault lines they belong to, plus the ones that do not belong to any of the above.
 
-	The analysis was conducted using the \href{https://www.python.org/}{Python} programming language. In particular, the \href{http://scikit-learn.org/stable/}{Scikit-Learn} package (\cite{scikit-learn}), the \href{http://www.numpy.org/}{NumPy} package (\cite{doi:10.1109/MCSE.2011.37}) and the \href{https://matplotlib.org/}{Matplotlib} package (\cite{Hunter_2007}) were used.
+	The analysis was conducted using the \href{https://www.python.org/}{Python} programming language. In particular, the \href{http://scikit-learn.org/stable/}{Scikit-Learn} package (\cite{scikit-learn}), the \href{http://www.numpy.org/}{NumPy} package (\cite{doi:10.1109/MCSE.2011.37}) and the \href{https://matplotlib.org/}{Matplotlib} library (\cite{Hunter_2007}) were used.
 	\section{Clustering Algorithms}
 	\subsection{K-Means Algorithm}
 	In our exposition of the K-Means Algorithm we rely heavily on \cite{hastie01statisticallearning}, \cite{MR2372475} and \cite{zaki2014dataminingbook}.
@@ -443,7 +449,7 @@
 	
 	To plot a world map clustered with the DBSCAN algorithm, we relied on \cite{Ester96adensity-based} for our choice of $\varepsilon$.
 	Firstly, we computed for each point in the dataset its $k$-th distance, defined as the distance between the point in question and the $k$-th closest neighbour. As already specified, $k$ was set to be $4$. Distances were then sorted as shown in Figure (\ref{fig:dbscan_distance}).
-	\cite{Ester96adensity-based} then suggests to pick a value of $\varepsilon$ that is at the elbow of the obtained plot. In this case, we set our value to be the $\varepsilon$ obtained at point $500$, so that we ended up setting $\varepsilon= 230.31$. We are partially satisfied with the choice, as a value closer to $100$ would have yielded better results. The results of the clustering are displayed in Figure (\ref{fig:dbscan_world}).
+	\cite{Ester96adensity-based} then suggests to pick a value of $\varepsilon$ that is at the elbow of the obtained plot. In this case, we set our value to be the $\varepsilon$ obtained at point $500$, so that we ended up setting $\varepsilon= 230.31$. We are only partially satisfied with the choice, as a value closer to $100$ would have yielded better results as far as our indices are concerned. The results of the clustering are displayed in Figure (\ref{fig:dbscan_world}).
 	
 	\subsection{Gaussian Mixture}
 	In order to introduce Gaussian Mixture models, we shall be relying mainly on \cite{Bishop:2006}.
@@ -566,6 +572,9 @@
  	As it is natural, the lower the value the better it is our model.
  	The number of components selected by this method was of $198$, which is close to being twice the number of actual partitions. This is remarkable because the BIC criterion penalises models with greater dimensions. Apparently, this dataset is more likely to have been generated by a model with a big number of components, signifying that the data are not easily separable into distinct Gaussians.
  	The result is presented in Figure (\ref{fig:gmm_world}).
+ 	
+ 	\section{Conclusion}
+ 	K-Means, DBSCAN and Gaussian mixture models were implemented on the same dataset and yielded different results, analysed by means of some internal and external indices. The main difficulty of the dataset was given by the distribution of the data, as there are some high-density zones very close to each other and rather elongated, opposed to some zones with small concentrations of points.  K-Means and Gaussian mixture proved to be better suited than DBSCAN if the aim is that of maximising the precision of the clustering, whereas DBSCAN (if properly tuned) can lead to better recall. However, in terms of Rand index and adjusted Rand index the three algorithms do not present excessive differences at their best values. This is interesting if we focus on the internal index we have computed, namely the Silhouette score, as it is very different if we consider the DBSCAN on one hand and the other two algorithms on the other. It would appear that K-Means and Gaussian Mixture models manage to maintain relatively good precision indices by clustering the events in little groups, probably subdividing partitions into smaller homogeneous groups. DBSCAN, on the other hand, seem to reproduce with higher fidelity the geometrical structure of the ground-truth labels. This is encouraging and would probably demand further investigation. Perhaps, by letting the $k$ parameter vary as well we might manage to find a better tuning for the algorithm.
 	\bibliographystyle{alpha}
 	\bibliography{bibliography_biblatex}
 \end{document}
