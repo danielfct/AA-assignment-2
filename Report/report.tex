@@ -502,6 +502,15 @@
  	Note that, in doing so, we are firstly evaluating the means, then the covariances and finally the mixing coefficients.
  	This algorithm tends to require many more iterations compared to the K-Means algorithm to converge, also requiring more computations at every cycle. It is therefore common to run the K-Means algorithm first in order to find a suitable initialisation for a Gaussian mixture model.
  	The means are the centroids of the clusters, the covariances are set as the covariances of the clusters and the mixing coefficients are set to be the proportions of points belonging to the cluster.
+ 	
+ 	\subsubsection{Choosing the number of components}
+ 	\begin{figure}
+ 		\includegraphics[width=\linewidth]{gmm_indeces.pdf}
+ 		\caption{Precision, Recall, F1-Score, Rand Index, Adjusted Rand Index and Silhouette Score for the Gaussian Mixture Model algorithms for different values $n$ of its components.}
+ 		\label{fig:gmm}
+ 	\end{figure}
+ 
+ 	The Gaussian Mixture Model was run on the dataset for an increasing number of components, namely from $2$ to $200$. For each $n$ we computed the usual indices: precision, recall, F1-Score, Rand index, adjusted Rand index and the Silhouette score. The results are plotted in Figure (\ref{fig:gmm}).
 	\bibliographystyle{alpha}
 	\bibliography{bibliography_biblatex}
 \end{document}
