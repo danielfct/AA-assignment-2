@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import sklearn
 from skimage.io import imread
+
 import data_processing
 import cluster_analysis
 import k_means
 import dbscan
+import gaussian
     
 def plot_cartesian_coordinates(x, y, z):
     """Plot Cartesian coordinates of seismic events"""
@@ -53,9 +55,8 @@ def plot_classes(labels, longitude, latitude, alpha=0.5, edge='k'):
     plt.axis('off') 
 
 
-def test_kmeans(X, labels_true, longitude, latitude):
+def test_kmeans(X, labels_true, longitude, latitude, max_cluster):
     
-    max_cluster= 150
     kmeans_eval= k_means.kmeans_tuning(X, max_cluster, labels_true, 205)
     k_means.plot_cluster(max_cluster, kmeans_eval)
 
@@ -93,13 +94,13 @@ def test_kmeans(X, labels_true, longitude, latitude):
         print("Adjusted Rand Index: %0.3f" % best_kmeans_eval[4])
         print("Silhouette: %0.3f" % best_kmeans_eval[5])
 
-def test_dbscan(X, labels_true, longitude, latitude, eps, delta, pace= 1):
+def test_dbscan(X, labels_true, longitude, latitude, epsilon, delta, pace= 1):
     #Calculate k_distances
     k_dist = dbscan.k_distance(X)
     dbscan.plot_k_distance(k_dist)
     #We set epsilon to the distance we have at point 500
-    min_eps = max(10, eps-delta)
-    max_eps = min(k_dist.max(), eps+delta)
+    min_eps = max(10, epsilon-delta)
+    max_eps = min(k_dist.max(), epsilon+delta)
     indices, n_clusters = dbscan.dbscan_tuning(X, labels_true, min_eps, max_eps, pace)
     dbscan.plot_indices(indices, min_eps, max_eps, pace)
     dbscan.plot_cluster(n_clusters, min_eps, max_eps, pace)
@@ -118,6 +119,24 @@ def test_dbscan(X, labels_true, longitude, latitude, eps, delta, pace= 1):
     print("Silhouette: %0.3f" % dbscan_evaluate_paper[5])
     plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
 
+def test_gaussian(X, labels_true, longitude, latitude, max_range):
+    best_gmm, bic = gaussian.gaussian_tuning(X, max_range)
+    gaussian.plot_bic_scores(np.array(bic), max_range)
+    best_gmm.fit(X)
+    labels_pred = best_gmm.predict(X)
+    
+    # Number of clusters in labels, ignoring noise if present.
+    gaussian_eval = cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+    n_clusters_= best_gmm.n_components
+    print('Number of clusters: %d' % n_clusters_)
+    print("Precision: %0.3f" % gaussian_eval[0])
+    print("Recall: %0.3f" % gaussian_eval[1])
+    print("F1: %0.3f" % gaussian_eval[2])
+    print("Rand Index: %0.3f" % gaussian_eval[3])
+    print("Adjusted Rand Index: %0.3f" % gaussian_eval[4])
+    print("Silhouette: %0.3f" % gaussian_eval[5])
+    plot_classes(labels_pred, longitude, latitude, alpha=0.5, edge='k')
+
 def main():
     # Get the data
     latitude, longitude, fault = data_processing.read_csv();
@@ -126,10 +145,17 @@ def main():
     X= data_processing.preprocess_data(x, y, z)
     
     #KMEANS
-    test_kmeans(X, fault, longitude, latitude)
+    max_cluster= 150
+    test_kmeans(X, fault, longitude, latitude, max_cluster)
     
     # DBSCAN
-    test_dbscan(X, fault, longitude, latitude, 300, 300)
+    epsilon = 300
+    delta = 300
+    test_dbscan(X, fault, longitude, latitude, epsilon, delta)
     #TODO: compute the indices excluding the noise!
     
-     ## TODO do the same for kmeans and gaussian
+    # GAUSSIAN
+    max_range = 100
+    test_gaussian(X, fault, longitude, latitude, max_range)
+    
+main()
