@@ -1,27 +1,13 @@
 import numpy as np
-import pandas as pd
 import sklearn
 import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d as plt3d
-from skimage.io import imread
-from sklearn import neighbors
-from sklearn.cluster import DBSCAN
 
-import data_processing as data
 import cluster_analysis
 
-latitude, longitude, fault = data.read_csv();
-x, y, z = data.transform_coordinates(latitude, longitude);
-#plot_cartesian_coordinates(x, y, z);
-X= data.preprocess_data(x, y, z)
-
-
-############### DBSCAN ########################################################
-#First of all, I have to set the eps parameter of the classifier. To do so,
-#I create a fictitious output vector, filled with ones and then applied the
-#kNN classifier.
-
 def k_distance(X, k= 4):
+    #First of all, I have to set the eps parameter of the classifier. To do so,
+    #I create a fictitious output vector, filled with ones and then applied the
+    #kNN classifier.
     aux_label= np.zeros(X.shape[0])
     neigh= sklearn.neighbors.KNeighborsClassifier(n_neighbors= 4)
     neigh.fit(X, aux_label)
@@ -94,31 +80,4 @@ def dbscan_plot_cluster(dbscan_n_clusters, min_eps, max_eps, pace):
     plt.xlabel('Value of Epsilon')
     plt.show()
     fig.savefig('dbscan_num_cluster.pdf')
-    plt.close()
-    
-def dbscan(X, labels_true, eps, delta, pace= 1):
-    k_dist= k_distance(X)
-    plot_k_distance(k_dist)
-    #We set epsilon to the distance we have at point 500
-    min_eps= max(10, eps-delta)
-    max_eps= min(k_dist.max(), eps+delta)
-    dbscan_indices, dbscan_n_clusters= dbscan_tuning(X, fault, min_eps, max_eps, pace)
-    dbscan_plot(dbscan_indices, min_eps, max_eps, pace)
-    dbscan_plot_cluster(dbscan_n_clusters, min_eps, max_eps, pace)
-    eps_paper= k_dist[500]
-    dbscan= sklearn.cluster.DBSCAN(eps_paper, 4, n_jobs=-1)
-    dbscan.fit(X)
-    pred_labels = dbscan.labels_
-    n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
-    dbscan_evaluate_paper= cluster_analysis.evaluate_cluster(X, labels_true, dbscan.labels_)
-    print('Number of clusters: %d' % n_clusters_)
-    print("Precision: %0.3f" % dbscan_evaluate_paper[0])
-    print("Recall: %0.3f" % dbscan_evaluate_paper[1])
-    print("F1: %0.3f" % dbscan_evaluate_paper[2])
-    print("Rand Index: %0.3f" % dbscan_evaluate_paper[3])
-    print("Adjusted Rand Index: %0.3f" % dbscan_evaluate_paper[4])
-    print("Silhouette: %0.3f" % dbscan_evaluate_paper[5])
-    data.plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
-    
-dbscan(X, fault, 300, 300, 1)
-#TODO: compute the indices excluding the noise!
+    plt.close() 
