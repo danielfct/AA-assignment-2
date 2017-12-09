@@ -121,23 +121,22 @@ def test_dbscan(X, labels_true, longitude, latitude, epsilon, delta, pace= 1):
     print("Silhouette: %0.3f" % dbscan_eval_paper[5])
     plot_classes("DBSCAN", pred_labels, longitude, latitude, alpha=0.5, edge='k')
 
-def test_gaussian(X, labels_true, longitude, latitude, max_range):
-    best_gmm, bic = gaussian.gaussian_tuning(X, max_range)
-    gaussian.plot_bic_scores(np.array(bic), max_range)
-    best_gmm.fit(X)
-    labels_pred = best_gmm.predict(X)
-    
-    gaussian_eval = cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
-    # Number of clusters in labels, ignoring noise if present.
-    n_clusters_= best_gmm.n_components
-    print('Number of clusters: %d' % n_clusters_)
-    print("Precision: %0.3f" % gaussian_eval[0])
-    print("Recall: %0.3f" % gaussian_eval[1])
-    print("F1: %0.3f" % gaussian_eval[2])
-    print("Rand Index: %0.3f" % gaussian_eval[3])
-    print("Adjusted Rand Index: %0.3f" % gaussian_eval[4])
-    print("Silhouette: %0.3f" % gaussian_eval[5])
-    plot_classes("Gaussian", labels_pred, longitude, latitude, alpha=0.5, edge='k')
+def test_gmm(X, labels_true, longitude, latitude, max_range):
+    gmm, best_gmm= gaussian.gmm_tuning(X, labels_true, max_range)
+    gaussian.gmm_plot(gmm, max_range)
+    gmm.fit(X)
+    labels_pred= gmm.predict(X)
+    gmm_evaluate= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+    n_clusters = gmm.n_components
+    print('Number of components: %d' % n_clusters)
+    print("Precision: %0.3f" % gmm_evaluate[0])
+    print("Recall: %0.3f" % gmm_evaluate[1])
+    print("F1: %0.3f" % gmm_evaluate[2])
+    print("Rand Index: %0.3f" % gmm_evaluate[3])
+    print("Adjusted Rand Index: %0.3f" % gmm_evaluate[4])
+    print("Silhouette: %0.3f" % gmm_evaluate[5])
+    plot_classes("GMM", labels_pred, longitude, latitude, alpha=0.5, edge='k')
+
 
 def main():
     # Get the data
@@ -145,6 +144,8 @@ def main():
     x, y, z = data_processing.transform_coordinates(latitude, longitude);
     plot_cartesian_coordinates(x, y, z);
     X= data_processing.preprocess_data(x, y, z)
+    
+    plot_classes("Faults", fault, longitude, latitude)
     
     # KMEANS
     max_cluster= 150
@@ -156,8 +157,8 @@ def main():
     test_dbscan(X, fault, longitude, latitude, epsilon, delta)
     #TODO: compute the indices excluding the noise!
     
-    # GAUSSIAN
-    max_range = 100
-    test_gaussian(X, fault, longitude, latitude, max_range)
+    # GMM
+    max_range = 200
+    test_gmm(X, fault, longitude, latitude, max_range)
     
 main()

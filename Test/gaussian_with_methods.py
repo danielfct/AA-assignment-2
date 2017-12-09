@@ -6,14 +6,6 @@ import itertools
 
 import cluster_analysis
 
-import data_processing as data
-
-latitude, longitude, fault = data.read_csv();
-x, y, z = data.transform_coordinates(latitude, longitude);
-#plot_cartesian_coordinates(x, y, z);
-X= data.preprocess_data(x,y,z)
-
-############### GAUSSIAN MIXTURE ##############################################
 def gmm_tuning(X, labels_true, max_range):
     n_components_range = range(2, max_range + 1)
     lowest_bic = np.infty
@@ -48,24 +40,3 @@ def gmm_plot(gmm_indices, max_range):
     plt.show()
     fig.savefig('gmm_indeces.pdf')
     plt.close()
-    
-def gmm_stats(X, gmm, labels_true, longitude, latitude):
-    gmm.fit(X)
-    labels_pred= gmm.predict(X)
-    gmm_evaluate= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
-    print('Number of components: %d' % gmm.n_components)
-    print("Precision: %0.3f" % gmm_evaluate[0])
-    print("Recall: %0.3f" % gmm_evaluate[1])
-    print("F1: %0.3f" % gmm_evaluate[2])
-    print("Rand Index: %0.3f" % gmm_evaluate[3])
-    print("Adjusted Rand Index: %0.3f" % gmm_evaluate[4])
-    print("Silhouette: %0.3f" % gmm_evaluate[5])
-    data.plot_classes(labels_pred, longitude, latitude, alpha=0.5, edge='k')
-    
-    
-def gmm(X, labels_true, max_range, longitude, latitude):
-    gmm, best_gmm= gmm_tuning(X, labels_true, max_range)
-    gmm_plot(gmm, max_range)
-    gmm_stats(X, best_gmm, labels_true, longitude, latitude)
-
-gmm(X, fault, 200, longitude, latitude)
