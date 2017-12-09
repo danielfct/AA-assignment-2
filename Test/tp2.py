@@ -8,7 +8,7 @@ import data_processing
 import cluster_analysis
 import k_means
 import dbscan
-#import gaussian_with_methods
+import gaussian
     
 def plot_cartesian_coordinates(x, y, z):
     """Plot Cartesian coordinates of seismic events"""
@@ -23,64 +23,42 @@ def plot_classes(plot_name, labels, longitude, latitude, alpha=0.5, edge='k'):
     """Plot seismic events using Mollweide projection.
     Arguments are the cluster labels and the longitude and latitude
     vectors of the events"""
-
-    img = imread("Mollweide_projection_SW.jpg")     
-    plt.figure(figsize=(10,5), frameon=False) 
-    x = longitude/180 * np.pi
-    y = latitude/180 * np.pi
+    
+    img = imread("Mollweide_projection_SW.jpg")        
+    plt.figure(figsize=(10,5),frameon=False)    
+    x = longitude/180*np.pi
+    y = latitude/180*np.pi
     ax = plt.subplot(111, projection="mollweide")
-    #print(ax.get_xlim(), ax.get_ylim())
-    t = ax.transData.transform(np.vstack((x, y)).T)
-    #print(np.min(np.vstack((x, y)).T, axis=0))
-    #print(np.min(t, axis=0))
-    clims = np.array([(-np.pi, 0), (np.pi, 0), (0, -np.pi/2), (0, np.pi/2)])
+    t = ax.transData.transform(np.vstack((x,y)).T)
+    clims = np.array([(-np.pi,0),(np.pi,0),(0,-np.pi/2),(0,np.pi/2)])
     lims = ax.transData.transform(clims)
     plt.close()
-    fig = plt.figure(figsize=(10,5), frameon=False)    
+    fig = plt.figure(figsize=(10,5),frameon=False)    
     plt.subplot(111)
-    plt.imshow(img, zorder=0, extent=[lims[0,0], lims[1,0], lims[2,1], lims[3,1]], aspect=1)        
+    plt.imshow(img,zorder=0,extent=[lims[0,0],lims[1,0],lims[2,1],lims[3,1]],aspect=1)        
     x = t[:,0]
     y= t[:,1]
     nots = np.zeros(len(labels)).astype(bool)
     diffs = np.unique(labels)    
     ix = 0   
-    for lab in diffs[diffs >= 0]:        
-        mask = labels == lab
-        nots = np.logical_or(nots, mask)        
-        plt.plot(x[mask], y[mask], 'o', markersize=4, mew=1, zorder=1, alpha=alpha, markeredgecolor=edge)
-        ix = ix + 1                    
+    for lab in diffs[diffs>=0]:        
+        mask = labels==lab
+        nots = np.logical_or(nots,mask)        
+        plt.plot(x[mask], y[mask],'o', markersize=4, mew=1,zorder=1,alpha=alpha, markeredgecolor=edge)
+        ix = ix+1                    
     mask = np.logical_not(nots)    
-    if np.sum(mask) > 0:
-        plt.plot(x[mask], y[mask], '.', markersize=1, mew=1, markerfacecolor='w', markeredgecolor=edge)
-    plt.axis('off') 
+    if np.sum(mask)>0:
+        plt.plot(x[mask], y[mask], '.', markersize=1, mew=1,markerfacecolor='w', markeredgecolor=edge)
+    plt.axis('off')
     plt.title(plot_name)
     fig.savefig(plot_name)
-
 
 def kmeans_performance(X, labels_true, longitude, latitude, max_cluster):
     kmeans_eval = k_means.kmeans_tuning(X, max_cluster, labels_true, 205)
     k_means.plot_cluster(max_cluster, kmeans_eval)
 
-### TODO delete this and keep the loop on all index scores?
-    #Best cluster according to the Silhouette score
-    best_k = kmeans_eval[:,5].argmax() + 2
-    best_kmeans_model = sklearn.cluster.KMeans(best_k, random_state=205)
-    best_kmeans_model.fit(X)
-    labels_pred = best_kmeans_model.labels_
-    plot_classes("KMeans", labels_pred, longitude, latitude, alpha=0.5, edge='k')
-    best_kmean_eval = cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
-    print('\nMaximising Silhouette')
-    print('Number of clusters: %d' % best_k)
-    print("Precision: %0.3f" % best_kmean_eval[0])
-    print("Recall: %0.3f" % best_kmean_eval[1])
-    print("F1: %0.3f" % best_kmean_eval[2])
-    print("Rand Index: %0.3f" % best_kmean_eval[3])
-    print("Adjusted Rand Index: %0.3f" % best_kmean_eval[4])
-    print("Silhouette: %0.3f" % best_kmean_eval[5])
-
-
-    index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
-    for i in range(0, 6):
+    index_name = ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
+    for i in range(0, len(index_name)):
         best_k = kmeans_eval[:,i].argmax() + 2
         best_kmeans_model = sklearn.cluster.KMeans(best_k, random_state=205)
         best_kmeans_model.fit(X)
@@ -112,7 +90,6 @@ def dbscan_performance(X, labels_true, longitude, latitude, epsilon, delta, pace
    
     dbscan_eval_paper = cluster_analysis.evaluate_cluster(X, labels_true, pred_labels)
     n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
-    print(eps_paper)
     print('Number of clusters: %d' % n_clusters_)
     print("Precision: %0.3f" % dbscan_eval_paper[0])
     print("Recall: %0.3f" % dbscan_eval_paper[1])
@@ -123,8 +100,8 @@ def dbscan_performance(X, labels_true, longitude, latitude, epsilon, delta, pace
     plot_classes("DBSCAN", pred_labels, longitude, latitude, alpha=0.5, edge='k')
 
 def gmm_performance(X, labels_true, longitude, latitude, max_range):
-    gmm, best_gmm= gaussian_with_methods.gmm_tuning(X, labels_true, max_range)
-    gaussian_with_methods.gmm_plot(gmm, max_range)
+    gmm_indices, gmm = gaussian.gmm_tuning(X, labels_true, max_range)
+    gaussian.gmm_plot(gmm_indices, max_range)
     gmm.fit(X)
     labels_pred= gmm.predict(X)
     gmm_evaluate= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
@@ -152,13 +129,12 @@ def main():
     kmeans_performance(X, fault, longitude, latitude, max_cluster)
     
     # DBSCAN
-    #epsilon = 300
-    #delta = 300
-    #dbscan_performance(X, fault, longitude, latitude, epsilon, delta)
-    #TODO: compute the indices excluding the noise!
+    epsilon = 300
+    delta = 300
+    dbscan_performance(X, fault, longitude, latitude, epsilon, delta)
     
     # GMM
-    #max_range = 200
-    #gmm_performance(X, fault, longitude, latitude, max_range)
+    max_range = 200
+    gmm_performance(X, fault, longitude, latitude, max_range)
     
 main()
