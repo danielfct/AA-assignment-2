@@ -8,7 +8,7 @@ import data_processing
 import cluster_analysis
 import k_means
 import dbscan
-import gaussian_with_methods
+#import gaussian_with_methods
     
 def plot_cartesian_coordinates(x, y, z):
     """Plot Cartesian coordinates of seismic events"""
@@ -112,6 +112,7 @@ def dbscan_performance(X, labels_true, longitude, latitude, epsilon, delta, pace
    
     dbscan_eval_paper = cluster_analysis.evaluate_cluster(X, labels_true, pred_labels)
     n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
+    print(eps_paper)
     print('Number of clusters: %d' % n_clusters_)
     print("Precision: %0.3f" % dbscan_eval_paper[0])
     print("Recall: %0.3f" % dbscan_eval_paper[1])
@@ -151,13 +152,13 @@ def main():
     kmeans_performance(X, fault, longitude, latitude, max_cluster)
     
     # DBSCAN
-    epsilon = 300
-    delta = 300
-    dbscan_performance(X, fault, longitude, latitude, epsilon, delta)
+    #epsilon = 300
+    #delta = 300
+    #dbscan_performance(X, fault, longitude, latitude, epsilon, delta)
     #TODO: compute the indices excluding the noise!
     
     # GMM
-    max_range = 200
-    gmm_performance(X, fault, longitude, latitude, max_range)
+    #max_range = 200
+    #gmm_performance(X, fault, longitude, latitude, max_range)
     
 main()
