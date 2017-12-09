@@ -38,5 +38,5 @@ def plot_cluster(max_cluster, kmeans_eval):
         plt.ylabel(index_name[i])
         plt.xlabel('Number of clusters')
     plt.show()
-    fig.savefig('kmeans_indexes.pdf')
+    fig.savefig('kmeans_indeces.pdf')
     plt.close()

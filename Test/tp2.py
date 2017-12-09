@@ -57,7 +57,7 @@ def plot_classes(plot_name, labels, longitude, latitude, alpha=0.5, edge='k'):
     fig.savefig(plot_name)
 
 
-def test_kmeans(X, labels_true, longitude, latitude, max_cluster):
+def kmeans_performance(X, labels_true, longitude, latitude, max_cluster):
     kmeans_eval = k_means.kmeans_tuning(X, max_cluster, labels_true, 205)
     k_means.plot_cluster(max_cluster, kmeans_eval)
 
@@ -95,7 +95,7 @@ def test_kmeans(X, labels_true, longitude, latitude, max_cluster):
         print("Adjusted Rand Index: %0.3f" % best_kmeans_eval[4])
         print("Silhouette: %0.3f" % best_kmeans_eval[5])
 
-def test_dbscan(X, labels_true, longitude, latitude, epsilon, delta, pace= 1):
+def dbscan_performance(X, labels_true, longitude, latitude, epsilon, delta, pace= 1):
     #Calculate k_distances
     k_dist = dbscan.k_distance(X)
     dbscan.plot_k_distance(k_dist)
@@ -121,7 +121,7 @@ def test_dbscan(X, labels_true, longitude, latitude, epsilon, delta, pace= 1):
     print("Silhouette: %0.3f" % dbscan_eval_paper[5])
     plot_classes("DBSCAN", pred_labels, longitude, latitude, alpha=0.5, edge='k')
 
-def test_gmm(X, labels_true, longitude, latitude, max_range):
+def gmm_performance(X, labels_true, longitude, latitude, max_range):
     gmm, best_gmm= gaussian.gmm_tuning(X, labels_true, max_range)
     gaussian.gmm_plot(gmm, max_range)
     gmm.fit(X)
@@ -149,16 +149,16 @@ def main():
     
     # KMEANS
     max_cluster= 150
-    test_kmeans(X, fault, longitude, latitude, max_cluster)
+    kmeans_performance(X, fault, longitude, latitude, max_cluster)
     
     # DBSCAN
     epsilon = 300
     delta = 300
-    test_dbscan(X, fault, longitude, latitude, epsilon, delta)
+    dbscan_performance(X, fault, longitude, latitude, epsilon, delta)
     #TODO: compute the indices excluding the noise!
     
     # GMM
     max_range = 200
-    test_gmm(X, fault, longitude, latitude, max_range)
+    gmm_performance(X, fault, longitude, latitude, max_range)
     
 main()
