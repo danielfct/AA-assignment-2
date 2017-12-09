@@ -265,7 +265,7 @@ index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Ind
 for i in range(0, 6):
     best_k= kmeans_eval[:,i].argmax() + 2
     best_kmeans= KMeans(best_k, random_state= 205).fit(X)
-    plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
+    #plot_classes(best_kmeans.labels_, longitude, latitude, alpha=0.5, edge='k')
     best_kmean_eval= evaluate_cluster(X, fault, best_kmeans.labels_)
     print('\nMaximising ' + index_name[i])
     print('Number of clusters: %d' % best_k)
