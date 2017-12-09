@@ -41,6 +41,11 @@ F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
 \newblock Scikit-learn: Machine learning in {P}ython.
 \newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
 
+\bibitem[Sch78]{Schwarz_1978}
+Gideon Schwarz.
+\newblock Estimating the dimension of a model.
+\newblock {\em The Annals of Statistics}, 6(2):461--464, mar 1978.
+
 \bibitem[vdWCV11]{doi:10.1109/MCSE.2011.37}
 Stéfan van~der Walt, S.~Chris Colbert, and Gaël Varoquaux.
 \newblock The numpy array: A structure for efficient numerical computation.

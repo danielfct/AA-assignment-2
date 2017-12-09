@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  9 DEC 2017 17:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.21)  9 DEC 2017 18:26
 entering extended mode
 **./report.tex
 (report.tex
@@ -992,25 +992,30 @@ File: gmm_indeces.pdf Graphic file (type pdf)
 Package pdftex.def Info: gmm_indeces.pdf used on input line 508.
 (pdftex.def)             Requested size: 426.79135pt x 426.7863pt.
 
-[13 <./gmm_indeces.pdf>] (report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 519.
- [14]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 519.
+<Gaussian.png, id=229, 722.7pt x 361.35pt>
+File: Gaussian.png Graphic file (type png)
+ <use Gaussian.png>
+Package pdftex.def Info: Gaussian.png used on input line 513.
+(pdftex.def)             Requested size: 426.79135pt x 213.39867pt.
+ [13 <./gmm_indeces.pdf>] (report.bbl [14 <./Gaussian.png>])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 540.
+ [15]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 540.
  (report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 519.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 519.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 540.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 540.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: C7BDA365C06B3AE54D5BAA8AF799DE0B;874.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 519.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 540.
  ) 
 Here is how much of TeX's memory you used:
- 10093 strings out of 493323
- 144038 string characters out of 3139062
- 281571 words of memory out of 3000000
- 13373 multiletter control sequences out of 15000+200000
+ 10103 strings out of 493323
+ 144178 string characters out of 3139062
+ 281733 words of memory out of 3000000
+ 13379 multiletter control sequences out of 15000+200000
  89742 words of font info for 75 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,10n,35p,1093b,405s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,10n,35p,1093b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/M
 iKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files/MiKTeX 2.9/fonts/e
 nc/dvips/lm/lm-ec.enc}{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy
@@ -1034,9 +1039,9 @@ type1/public/lm/lmro10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/l
 msy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy5.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2
 .9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (14 pages, 699294 bytes).
+Output written on report.pdf (15 pages, 900640 bytes).
 PDF statistics:
- 382 PDF objects out of 1000 (max. 8388607)
- 54 named destinations out of 1000 (max. 500000)
- 112 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 394 PDF objects out of 1000 (max. 8388607)
+ 57 named destinations out of 1000 (max. 500000)
+ 117 words of extra memory for PDF output out of 10000 (max. 10000000)
 
