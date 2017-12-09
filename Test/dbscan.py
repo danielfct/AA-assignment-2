@@ -81,38 +81,4 @@ def plot_cluster(n_clusters, min_eps, max_eps, pace):
     plt.xlabel('Value of Epsilon')
     plt.show()
     fig.savefig('dbscan_num_cluster.pdf')
-<<<<<<< HEAD
     plt.close()
-    
-def dbscan(X, labels_true, eps, delta, pace= 1):
-    k_dist= k_distance(X)
-    plot_k_distance(k_dist)
-    #We set epsilon to the distance we have at point 500
-    min_eps= max(10, eps-delta)
-    max_eps= min(k_dist.max(), eps+delta)
-    dbscan_indices, dbscan_n_clusters= dbscan_tuning(X, fault, min_eps, max_eps, pace)
-    
-    
-    dbscan_plot(dbscan_indices, min_eps, max_eps, pace)
-    dbscan_plot_cluster(dbscan_n_clusters, min_eps, max_eps, pace)
-    eps_paper= k_dist[500]
-    dbscan= sklearn.cluster.DBSCAN(eps_paper, 4, n_jobs=-1)
-    dbscan.fit(X)
-    pred_labels = dbscan.labels_
-    n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
-    dbscan_evaluate_paper= cluster_analysis.evaluate_cluster(X, labels_true, dbscan.labels_)
-    print('Number of clusters: %d' % n_clusters_)
-    print("Precision: %0.3f" % dbscan_evaluate_paper[0])
-    print("Recall: %0.3f" % dbscan_evaluate_paper[1])
-    print("F1: %0.3f" % dbscan_evaluate_paper[2])
-    print("Rand Index: %0.3f" % dbscan_evaluate_paper[3])
-    print("Adjusted Rand Index: %0.3f" % dbscan_evaluate_paper[4])
-    print("Silhouette: %0.3f" % dbscan_evaluate_paper[5])
-    data.plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
-    
-#dbscan(X, fault, 300, 300, 1)
-dbscan(X, fault, 300, 300, 1)
-#TODO: compute the indices excluding the noise!
-=======
-    plt.close() 
->>>>>>> e1d62ae11a043457908cc65da6959aa4f395e115

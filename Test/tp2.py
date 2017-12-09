@@ -8,7 +8,7 @@ import data_processing
 import cluster_analysis
 import k_means
 import dbscan
-import gaussian
+import gaussian_with_methods
     
 def plot_cartesian_coordinates(x, y, z):
     """Plot Cartesian coordinates of seismic events"""
@@ -122,8 +122,8 @@ def dbscan_performance(X, labels_true, longitude, latitude, epsilon, delta, pace
     plot_classes("DBSCAN", pred_labels, longitude, latitude, alpha=0.5, edge='k')
 
 def gmm_performance(X, labels_true, longitude, latitude, max_range):
-    gmm, best_gmm= gaussian.gmm_tuning(X, labels_true, max_range)
-    gaussian.gmm_plot(gmm, max_range)
+    gmm, best_gmm= gaussian_with_methods.gmm_tuning(X, labels_true, max_range)
+    gaussian_with_methods.gmm_plot(gmm, max_range)
     gmm.fit(X)
     labels_pred= gmm.predict(X)
     gmm_evaluate= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
