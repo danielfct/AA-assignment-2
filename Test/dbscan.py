@@ -103,6 +103,8 @@ def dbscan(X, labels_true, eps, delta, pace= 1):
     min_eps= max(10, eps-delta)
     max_eps= min(k_dist.max(), eps+delta)
     dbscan_indices, dbscan_n_clusters= dbscan_tuning(X, fault, min_eps, max_eps, pace)
+    
+    
     dbscan_plot(dbscan_indices, min_eps, max_eps, pace)
     dbscan_plot_cluster(dbscan_n_clusters, min_eps, max_eps, pace)
     eps_paper= k_dist[500]
@@ -120,5 +122,6 @@ def dbscan(X, labels_true, eps, delta, pace= 1):
     print("Silhouette: %0.3f" % dbscan_evaluate_paper[5])
     data.plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
     
+#dbscan(X, fault, 300, 300, 1)
 dbscan(X, fault, 300, 300, 1)
 #TODO: compute the indices excluding the noise!
