@@ -25,7 +25,7 @@ def plot_classes(plot_name, labels, longitude, latitude, alpha=0.5, edge='k'):
     vectors of the events"""
 
     img = imread("Mollweide_projection_SW.jpg")     
-    fig = plt.figure(figsize=(10,5), frameon=False) 
+    plt.figure(figsize=(10,5), frameon=False) 
     x = longitude/180 * np.pi
     y = latitude/180 * np.pi
     ax = plt.subplot(111, projection="mollweide")
@@ -36,7 +36,7 @@ def plot_classes(plot_name, labels, longitude, latitude, alpha=0.5, edge='k'):
     clims = np.array([(-np.pi, 0), (np.pi, 0), (0, -np.pi/2), (0, np.pi/2)])
     lims = ax.transData.transform(clims)
     plt.close()
-    plt.figure(figsize=(10,5), frameon=False)    
+    fig = plt.figure(figsize=(10,5), frameon=False)    
     plt.subplot(111)
     plt.imshow(img, zorder=0, extent=[lims[0,0], lims[1,0], lims[2,1], lims[3,1]], aspect=1)        
     x = t[:,0]
@@ -136,7 +136,6 @@ def gmm_performance(X, labels_true, longitude, latitude, max_range):
     print("Adjusted Rand Index: %0.3f" % gmm_evaluate[4])
     print("Silhouette: %0.3f" % gmm_evaluate[5])
     plot_classes("GMM", labels_pred, longitude, latitude, alpha=0.5, edge='k')
-
 
 def main():
     # Get the data
