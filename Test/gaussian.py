@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from skimage.io import imread
 from sklearn import mixture
@@ -15,60 +14,58 @@ x, y, z = data.transform_coordinates(latitude, longitude);
 X= data.preprocess_data(x,y,z)
 
 ############### GAUSSIAN MIXTURE ##############################################
-lowest_bic = np.infty
-bic = []
-max_range= 100
-n_components_range = range(1, max_range + 1)
-cv_types = ['spherical', 'tied', 'diag', 'full']
-for cv_type in cv_types:
-    print('\n'+cv_type)
-    iter= 0
+def gmm_tuning(X, labels_true, max_range):
+    n_components_range = range(2, max_range + 1)
+    lowest_bic = np.infty
+    bic = []
+    gmm_indices= np.zeros((max_range - 1, 6))
+    i= 0
     for n_components in n_components_range:
-        print(iter/max_range)
-        iter+= 1
+        print(n_components)
         # Fit a Gaussian mixture with EM
-        gmm = mixture.GaussianMixture(n_components=n_components,
-                                      covariance_type=cv_type)
+        gmm = mixture.GaussianMixture(n_components= n_components)
         gmm.fit(X)
         bic.append(gmm.bic(X))
         if bic[-1] < lowest_bic:
             lowest_bic = bic[-1]
             best_gmm = gmm
+        labels_pred = gmm.predict(X)
+        gmm_indices[i]= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+        i+= 1
+    return gmm_indices, best_gmm
 
-bic = np.array(bic)
-color_iter = itertools.cycle(['navy', 'turquoise', 'cornflowerblue',
-                              'darkorange'])
-clf = best_gmm
-bars = []
+def gmm_plot(gmm_indices, max_range):
+    index_name= ['Precision', 'Recall', 'F1Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
+    x_axis= range(2, max_range + 1)
+    fig= plt.figure(figsize=(20,20))
+    for i in range(0,6):
+        plt.subplot(3, 2, i+1)
+        plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+        plt.title('Gaussian Mixture Model ' + index_name[i])
+        plt.plot(x_axis, gmm_indices[:,i])
+        plt.ylabel(index_name[i])
+        plt.xlabel('Number of Components')
+    plt.show()
+    fig.savefig('gmm_indeces.pdf')
+    plt.close()
+    
+def gmm_stats(X, gmm, labels_true):
+    gmm.fit(X)
+    labels_pred= gmm.predict(X)
+    gmm_evaluate= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+    print('Number of components: %d' % gmm.n_components)
+    print("Precision: %0.3f" % gmm_evaluate[0])
+    print("Recall: %0.3f" % gmm_evaluate[1])
+    print("F1: %0.3f" % gmm_evaluate[2])
+    print("Rand Index: %0.3f" % gmm_evaluate[3])
+    print("Adjusted Rand Index: %0.3f" % gmm_evaluate[4])
+    print("Silhouette: %0.3f" % gmm_evaluate[5])
+    data.plot_classes(labels_pred, longitude, latitude, alpha=0.5, edge='k')
+    
+    
+def gmm(X, labels_true, max_range, longitude, latitude):
+    gmm, best_gmm= gmm_tuning(X, labels_true, max_range)
+    gmm_plot(gmm, max_range)
+    gmm_stats(X, best_gmm, longitude, latitude)
 
-# Plot the BIC scores
-spl = plt.subplot(2, 1, 1)
-for i, (cv_type, color) in enumerate(zip(cv_types, color_iter)):
-    xpos = np.array(n_components_range) + .2 * (i - 2)
-    bars.append(plt.bar(xpos, bic[i * len(n_components_range):
-                                  (i + 1) * len(n_components_range)],
-                        width=.2, color=color))
-plt.xticks(n_components_range)
-plt.ylim([bic.min() * 1.01 - .01 * bic.max(), bic.max()])
-plt.title('BIC score per model')
-xpos = np.mod(bic.argmin(), len(n_components_range)) + .65 +\
-    .2 * np.floor(bic.argmin() / len(n_components_range))
-plt.text(xpos, bic.min() * 0.97 + .03 * bic.max(), '*', fontsize=14)
-spl.set_xlabel('Number of components')
-spl.legend([b[0] for b in bars], cv_types)
-
-
-##BEST GMM
-clf.fit(X)
-pred_labels = clf.predict(X)
-
-# Number of clusters in labels, ignoring noise if present.
-n_clusters_= clf.n_components
-print('Number of clusters: %d' % n_clusters_)
-print("Precision: %0.3f" % cluster_analysis.precision(fault, pred_labels))
-print("Recall: %0.3f" % cluster_analysis.recall(fault, pred_labels))
-print("F1: %0.3f" % cluster_analysis.f1_score(fault, pred_labels))
-print("Rand Index: %0.3f" % cluster_analysis.rand_index(fault, pred_labels))
-print("Adjusted Rand Index: %0.3f" % cluster_analysis.adj_rand_index(fault, pred_labels))
-print("Silhouette: %0.3f" % cluster_analysis.silhouette(X, pred_labels))
-data.plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
+gmm(X, fault, 200, longitude, latitude)
