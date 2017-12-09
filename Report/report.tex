@@ -414,6 +414,29 @@
 	The connected components of this graph correspond to the core points of each cluster. Next, every core point incorporates into its cluster any border points in its neighbourhood.
 	The biggest drawback of DBSCAN is given by its sensitivity to the value of $\varepsilon$, in particular if clusters have different densities. What happens is that is $\varepsilon$ is too small, than sparser clusters will be categorised as noise and if it is too large different clusters might end up being grouped together.
 
+	\subsubsection{Choosing the parameters for the DBSCAN}
+	 	\begin{figure}
+		\includegraphics[width=\linewidth]{dbscan_indeces.pdf}
+		\caption{Precision, Recall, F1-Score, Rand Index, Adjusted Rand Index and Silhouette Score for the DBSCAN algorithm for different values of $\varepsilon$.}
+		\label{fig:dbscan}
+	\end{figure}
+	\begin{figure}
+		\includegraphics[width=\linewidth]{dbscan_num_cluster.pdf}
+		\caption{Number of clusters obtained via the DBSCAN algorithm for different values of $\varepsilon$.}
+		\label{fig:dbscan_clusters}
+	\end{figure}
+
+	\begin{figure}
+		\includegraphics[width=\linewidth]{k_dist_dbscan.pdf}
+		\caption{$4$-th distance of the points in the dataset sorted in decreasing order. The $4$-th distance is defined as the distance between a given point and its fourth closest neighbour.}
+		\label{fig:dbscan_distance}
+	\end{figure}
+	DBSCAN algorithm requires two parameters to run: the value $k$ that sets the minimum number of points required to have a core point and the value $\varepsilon$ to set the neighbourhood. As far as the first one is concerned, we set $k=4$ as suggested in \cite{Ester96adensity-based}.
+	Regarding $\varepsilon$, the algorithm was implemented for incrementing values of it, ranging from $0$ to $600$. Results are displayed in Figure (\ref{fig:dbscan}) and Figure (\ref{fig:dbscan_clusters}).
+	The indices we obtained are rather different from those obtained applying K-Means and the Gaussian mixture model (which are introduced later). We still see the trade-off between precision and recall, as well as the effect this has on the F1-Score. However, it is interesting to see how the peaks for the F1-Score, the Rand index and the adjusted Rand index are at a number of clusters that is closer to the actual number of partitions (at least with respect to the K-Means algorithm), signifying that the DBSCAN performs well when $\varepsilon$ is set in such a way to induce a number of cluster more similar to the true one. Moreover, it is interesting to see that the Silhouette coefficient is close to zero: DBSCAN clusters together groups of points that are as close to their cluster as they are to the closest one.
+	
+	To plot a world map clustered with the DBSCAN algorithm, we relied on \cite{Ester96adensity-based} for our choice of $\varepsilon$.
+	Firstly, we computed for each point in the dataset its $k$-th distance, defined as the distance between the point in question and the $k$-th closest neighbour. As already specified, $k$ was set to be $4$. Distances were then sorted as shown in Figure (\ref{fig:dbscan_distance}).
 	\subsection{Gaussian Mixture}
 	In order to introduce Gaussian Mixture models, we shall be relying mainly on \cite{Bishop:2006}.
 	A Gaussian mixture distribution can be written as a linear superposition of Gaussians in the form
