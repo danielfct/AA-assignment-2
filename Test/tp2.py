@@ -83,7 +83,7 @@ def main():
     X= data_processing.preprocess_data(x, y, z)
     
     # DBSCAN
-    test_dbscan(X, fault, 300, 300, 1)
+    test_dbscan(X, fault, longitude, latitude, 300, 300, 1)
     #TODO: compute the indices excluding the noise!
     
      ## TODO do the same for kmeans and gaussian
