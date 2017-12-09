@@ -107,4 +107,11 @@ def silhouette(X, labels_pred):
 
 def evaluate_cluster(X, labels_true, labels_pred):
     tp, fn, fp, tn= positive_negative(labels_true, labels_pred)
-    return np.array([precision(tp, fp), recall(tp, fn), f1_score(tp, fn, fp), rand_index(tp, fn, fp, tn), adj_rand_index(labels_true, labels_pred), silhouette(X, labels_pred)])
+    return np.array([
+            precision(tp, fp), 
+            recall(tp, fn), 
+            f1_score(tp, fn, fp), 
+            rand_index(tp, fn, fp, tn), 
+            adj_rand_index(labels_true, labels_pred), 
+            silhouette(X, labels_pred)
+            ])
