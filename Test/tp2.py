@@ -154,7 +154,6 @@ def main():
     epsilon = 300
     delta = 300
     test_dbscan(X, fault, longitude, latitude, epsilon, delta)
-    #TODO: compute the indices excluding the noise!
     
     # GAUSSIAN
     max_range = 100

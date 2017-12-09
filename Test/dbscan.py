@@ -81,7 +81,6 @@ def plot_cluster(n_clusters, min_eps, max_eps, pace):
     plt.xlabel('Value of Epsilon')
     plt.show()
     fig.savefig('dbscan_num_cluster.pdf')
-<<<<<<< HEAD
     plt.close()
     
 def dbscan(X, labels_true, eps, delta, pace= 1):
@@ -111,8 +110,6 @@ def dbscan(X, labels_true, eps, delta, pace= 1):
     data.plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
     
 #dbscan(X, fault, 300, 300, 1)
-dbscan(X, fault, 300, 300, 1)
+dbscan(X, fault, 300, 500, 1)
 #TODO: compute the indices excluding the noise!
-=======
-    plt.close() 
->>>>>>> e1d62ae11a043457908cc65da6959aa4f395e115
+
