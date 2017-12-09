@@ -19,13 +19,13 @@ def plot_cartesian_coordinates(x, y, z):
     ax.scatter3D(x, y, z, '.', s=10, c='green')
     plt.savefig('Seismic_events_cartesian_coordinates.png', bbox_inches='tight');
 
-def plot_classes(labels, longitude, latitude, alpha=0.5, edge='k'):
+def plot_classes(plot_name, labels, longitude, latitude, alpha=0.5, edge='k'):
     """Plot seismic events using Mollweide projection.
     Arguments are the cluster labels and the longitude and latitude
     vectors of the events"""
 
-    img = imread("Mollweide_projection_SW.jpg")        
-    plt.figure(figsize=(10,5), frameon=False)    
+    img = imread("Mollweide_projection_SW.jpg")     
+    fig = plt.figure(figsize=(10,5), frameon=False) 
     x = longitude/180 * np.pi
     y = latitude/180 * np.pi
     ax = plt.subplot(111, projection="mollweide")
@@ -53,20 +53,22 @@ def plot_classes(labels, longitude, latitude, alpha=0.5, edge='k'):
     if np.sum(mask) > 0:
         plt.plot(x[mask], y[mask], '.', markersize=1, mew=1, markerfacecolor='w', markeredgecolor=edge)
     plt.axis('off') 
+    plt.title(plot_name)
+    fig.savefig(plot_name)
 
 
 def test_kmeans(X, labels_true, longitude, latitude, max_cluster):
-    
-    kmeans_eval= k_means.kmeans_tuning(X, max_cluster, labels_true, 205)
+    kmeans_eval = k_means.kmeans_tuning(X, max_cluster, labels_true, 205)
     k_means.plot_cluster(max_cluster, kmeans_eval)
 
 ### TODO delete this and keep the loop on all index scores?
     #Best cluster according to the Silhouette score
-    best_k= kmeans_eval[:,5].argmax() + 2
-    best_kmeans= sklearn.cluster.KMeans(25, random_state= 205).fit(X)
-    labels_pred = best_kmeans.labels_
-    plot_classes(labels_pred, longitude, latitude, alpha=0.5, edge='k')
-    best_kmean_eval= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+    best_k = kmeans_eval[:,5].argmax() + 2
+    best_kmeans_model = sklearn.cluster.KMeans(best_k, random_state=205)
+    best_kmeans_model.fit(X)
+    labels_pred = best_kmeans_model.labels_
+    plot_classes("KMeans", labels_pred, longitude, latitude, alpha=0.5, edge='k')
+    best_kmean_eval = cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
     print('\nMaximising Silhouette')
     print('Number of clusters: %d' % best_k)
     print("Precision: %0.3f" % best_kmean_eval[0])
@@ -79,12 +81,11 @@ def test_kmeans(X, labels_true, longitude, latitude, max_cluster):
 
     index_name= ['Precision', 'Recall', 'F1-Score', 'Rand Index', 'Adjusted Rand Index', 'Silhouette']
     for i in range(0, 6):
-        best_k= kmeans_eval[:,i].argmax() + 2
-        best_kmeans_model = sklearn.cluster.KMeans(best_k, random_state= 205)
+        best_k = kmeans_eval[:,i].argmax() + 2
+        best_kmeans_model = sklearn.cluster.KMeans(best_k, random_state=205)
         best_kmeans_model.fit(X)
         labels_pred = best_kmeans_model.labels_
-        #plot_classes(labels_pred, longitude, latitude, alpha=0.5, edge='k')
-        best_kmeans_eval= cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+        best_kmeans_eval = cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
         print('\nMaximising ' + index_name[i])
         print('Number of clusters: %d' % best_k)
         print("Precision: %0.3f" % best_kmeans_eval[0])
@@ -108,16 +109,17 @@ def test_dbscan(X, labels_true, longitude, latitude, epsilon, delta, pace= 1):
     dbscan_model = sklearn.cluster.DBSCAN(eps_paper, 4, n_jobs=-1)
     dbscan_model.fit(X)
     pred_labels = dbscan_model.labels_
+   
+    dbscan_eval_paper = cluster_analysis.evaluate_cluster(X, labels_true, pred_labels)
     n_clusters_ = len(set(pred_labels)) - (1 if -1 in pred_labels else 0)
-    dbscan_evaluate_paper = cluster_analysis.evaluate_cluster(X, labels_true, pred_labels)
     print('Number of clusters: %d' % n_clusters_)
-    print("Precision: %0.3f" % dbscan_evaluate_paper[0])
-    print("Recall: %0.3f" % dbscan_evaluate_paper[1])
-    print("F1: %0.3f" % dbscan_evaluate_paper[2])
-    print("Rand Index: %0.3f" % dbscan_evaluate_paper[3])
-    print("Adjusted Rand Index: %0.3f" % dbscan_evaluate_paper[4])
-    print("Silhouette: %0.3f" % dbscan_evaluate_paper[5])
-    plot_classes(pred_labels, longitude, latitude, alpha=0.5, edge='k')
+    print("Precision: %0.3f" % dbscan_eval_paper[0])
+    print("Recall: %0.3f" % dbscan_eval_paper[1])
+    print("F1: %0.3f" % dbscan_eval_paper[2])
+    print("Rand Index: %0.3f" % dbscan_eval_paper[3])
+    print("Adjusted Rand Index: %0.3f" % dbscan_eval_paper[4])
+    print("Silhouette: %0.3f" % dbscan_eval_paper[5])
+    plot_classes("DBSCAN", pred_labels, longitude, latitude, alpha=0.5, edge='k')
 
 def test_gaussian(X, labels_true, longitude, latitude, max_range):
     best_gmm, bic = gaussian.gaussian_tuning(X, max_range)
@@ -125,8 +127,8 @@ def test_gaussian(X, labels_true, longitude, latitude, max_range):
     best_gmm.fit(X)
     labels_pred = best_gmm.predict(X)
     
-    # Number of clusters in labels, ignoring noise if present.
     gaussian_eval = cluster_analysis.evaluate_cluster(X, labels_true, labels_pred)
+    # Number of clusters in labels, ignoring noise if present.
     n_clusters_= best_gmm.n_components
     print('Number of clusters: %d' % n_clusters_)
     print("Precision: %0.3f" % gaussian_eval[0])
@@ -135,7 +137,7 @@ def test_gaussian(X, labels_true, longitude, latitude, max_range):
     print("Rand Index: %0.3f" % gaussian_eval[3])
     print("Adjusted Rand Index: %0.3f" % gaussian_eval[4])
     print("Silhouette: %0.3f" % gaussian_eval[5])
-    plot_classes(labels_pred, longitude, latitude, alpha=0.5, edge='k')
+    plot_classes("Gaussian", labels_pred, longitude, latitude, alpha=0.5, edge='k')
 
 def main():
     # Get the data
@@ -144,7 +146,7 @@ def main():
     plot_cartesian_coordinates(x, y, z);
     X= data_processing.preprocess_data(x, y, z)
     
-    #KMEANS
+    # KMEANS
     max_cluster= 150
     test_kmeans(X, fault, longitude, latitude, max_cluster)
     
